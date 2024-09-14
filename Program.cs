@@ -9,7 +9,7 @@ namespace DeleteUn
         public static void Main(string[] args)
         {
             string loc = @"F:\FullSetC\Game\Active\BrownDust\export";
-            //DeleteUnnecessary(loc);
+            DeleteUnnecessary(loc);
             //RenameSpine(loc);
             //SortSpine(loc);
             SortAsset(loc);

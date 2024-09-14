@@ -1,0 +1,222 @@
+[
+	{
+		"keyword": "sactx",
+		"path": "ui/atlas"
+	},
+	{
+		"keyword": "bosspart",
+		"path": "ui/bosspart"
+	},
+	{
+		"keyword": "updateintrodue",
+		"path": "ui/updateIntro"
+	},
+	{
+		"keyword": "bg_attendance",
+		"path": "ui/bg/bg_attendance"
+	},
+	{
+		"keyword": "bg_eventminigame",
+		"path": "ui/bg/bg_eventminigame"
+	},
+	{
+		"keyword": "bg_eventmission",
+		"path": "ui/bg/bg_eventmission"
+	},
+	{
+		"keyword": "bg_exchange",
+		"path": "ui/bg/bg_exchange"
+	},
+	{
+		"keyword": "bg_package",
+		"path": "ui/bg/bg_package"
+	},
+	{
+		"keyword": "bg_pass",
+		"path": "ui/bg/bg_pass"
+	},	
+	{
+		"keyword": "bt_",
+		"path": "ui/button"
+	},
+	{
+		"keyword": "currency_",
+		"path": "ui/currency"
+	},
+	{
+		"keyword": "guide_",
+		"path": "ui/guide"
+	},
+	{
+		"keyword": "icon_char",
+		"path": "ui/icon/icon_char"
+	},
+	{
+		"keyword": "icon_collection",
+		"path": "ui/icon/icon_collection"
+	},
+	{
+		"keyword": "icon_costume",
+		"path": "ui/icon/icon_costume"
+	},
+	{
+		"keyword": "icon_emoji",
+		"path": "ui/icon/icon_emoji"
+	},
+	{
+		"keyword": "icon_equipment",
+		"path": "ui/icon/icon_equipment"
+	},
+	{
+		"keyword": "icon_food",
+		"path": "ui/icon/icon_food"
+	},
+	{
+		"keyword": "icon_pvprank",
+		"path": "ui/icon/icon_pvprank"
+	},
+	{
+		"keyword": "icon_questItem",
+		"path": "ui/icon/icon_questItem"
+	},
+	{
+		"keyword": "icon_resource",
+		"path": "ui/icon/icon_resource"
+	},
+	{
+		"keyword": "icon_skill",
+		"path": "ui/icon/icon_skill"
+	},
+	{
+		"keyword": "bufficon_",
+		"path": "ui/icon/bufficon"
+	},
+	{
+		"keyword": "icon_guildemblem",
+		"path": "ui/icon/guildemblem"
+	},
+	{
+		"keyword": "skillicon_",
+		"path": "ui/icon/skillicon"
+	},
+	{
+		"keyword": "icon",
+		"path": "ui/icon/misc"
+	},
+	{
+		"keyword": "object_cinema",
+		"path": "ui/icon/object_cinema"
+	},
+	{
+		"keyword": "pack_char",
+		"path": "ui/icon/pack/pack_char"
+	},
+	{
+		"keyword": "pack_event",
+		"path": "ui/icon/pack/pack_char"
+	},
+	{
+		"keyword": "pack_concept",
+		"path": "ui/icon/pack/pack_concept"
+	},	
+	{
+		"keyword": "_concept_",
+		"path": "ui/icon/pack/pack_concept"
+	},	
+	{
+		"keyword": "packclear",
+		"path": "ui/icon/pack/packclear"
+	},
+	{
+		"keyword": "talent_bufficon_",
+		"path": "ui/icon/talent_bufficon"
+	},
+	{
+		"keyword": "screenshot",
+		"path": "ui/icon/pack/pack_screenshot"
+	},
+	{
+		"keyword": "pack_special",
+		"path": "ui/icon/pack/pack_special"
+	},
+	{
+		"keyword": "pack_story",
+		"path": "ui/icon/pack/pack_story"
+	},
+	{
+		"keyword": "worldthumb",
+		"path": "ui/icon/pack/worldthumb"
+	},
+	{
+		"keyword": "illust_boss",
+		"path": "ui/illust/illust_boss"
+	},
+	{
+		"keyword": "illust_char",
+		"path": "ui/illust/illust_char"
+	},
+	{
+		"keyword": "illust_face",
+		"path": "ui/illust/illust_face"
+	},
+	{
+		"keyword": "illust_inven_char",
+		"path": "ui/illust/illust_inven_char"
+	},
+	{
+		"keyword": "illust_npcFace",
+		"path": "ui/illust/illust_npcFace"
+	},
+	{
+		"keyword": "illust_npc",
+		"path": "ui/illust/illust_npc"
+	},
+	{
+		"keyword": "illust_simple_char",
+		"path": "ui/illust/illust_simple_char"
+	},
+	{
+		"keyword": "illust_skill_char",
+		"path": "ui/illust/illust_skill_char"
+	},
+	{
+		"keyword": "room",
+		"path": "ui/map/room"
+	},
+	{
+		"keyword": "Map",
+		"path": "ui/map"
+	},
+	{
+		"keyword": "map",
+		"path": "ui/map"
+	},
+	{
+		"keyword": "roguelike",
+		"path": "ui/roguelike"
+	},
+	{
+		"keyword": "minimap",
+		"path": "ui/minimap"
+	},
+	{
+		"keyword": "pickup",
+		"path": "ui/pickup"
+	},
+	{
+		"keyword": "thumb_map",
+		"path": "ui/thumb/thumb_map"
+	},
+	{
+		"keyword": "thumb_specialIllust",
+		"path": "ui/thumb/thumb_specialIllust"
+	},
+	{
+		"keyword": "bg_",
+		"path": "ui/bg/misc"
+	},
+	{
+		"keyword": "worldmap",
+		"path": "ui/worldmap"
+	}
+]
