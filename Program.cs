@@ -12,7 +12,7 @@ namespace DeleteUn
             DeleteUnnecessary(loc);
             //RenameSpine(loc);
             //SortSpine(loc);
-            SortAsset(loc);
+            //SortAsset(loc);
             Console.ReadLine();
             
         }
