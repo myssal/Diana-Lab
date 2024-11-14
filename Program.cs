@@ -10,13 +10,17 @@ namespace DeleteUn
         {
             string loc = @"F:\FullSetC\Game\Active\BrownDust\export";
             DeleteUnnecessary(loc);
-            //RenameSpine(loc);
-            //SortSpine(loc);
-            //SortAsset(loc);
+            RenameSpine(loc);
+            SortSpine(loc);
+            SortAsset(loc);
             Console.ReadLine();
             
         }
 
+        public static void GetFiles(string path)
+        {
+
+        }
         public static void DeleteUnnecessary(string path)
         {
             List<string> deleteList = File.ReadAllLines("delete.txt").ToList();

@@ -10,5 +10,4 @@ public class PathJson
 		this.keyword = keyword;
 		this.path = path;
 	}
-	public PathJson() { }
 }
