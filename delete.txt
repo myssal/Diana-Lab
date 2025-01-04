@@ -48,3 +48,7 @@ Buff_B
 Buff_F
 text_
 Battleidle
+GetItem
+Getitem
+Ride
+Action

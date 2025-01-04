@@ -4,6 +4,10 @@
 		"path": "ui/atlas"
 	},
 	{
+		"keyword": "item_package",
+		"path":  "ui/item_package"
+	},
+	{
 		"keyword": "bosspart",
 		"path": "ui/bosspart"
 	},
@@ -218,5 +222,13 @@
 	{
 		"keyword": "worldmap",
 		"path": "ui/worldmap"
+	},
+	{
+		"keyword": "sepcialillust",
+		"path": "ui/spec_illust"
+	},
+	{
+		"keyword": "survival",
+		"path": "ui/survival"
 	}
 ]
