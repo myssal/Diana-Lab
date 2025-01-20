@@ -1,6 +1,8 @@
 ﻿using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace DeleteUn
 {
@@ -8,11 +10,15 @@ namespace DeleteUn
     {
         public static void Main(string[] args)
         {
-            string loc = args[0];           
-            DeleteUnnecessary(loc);
-            RenameSpine(loc);
-            SortSpine(loc);
-            SortAsset(loc);
+            //string loc = args[0];
+            string og = @"F:\FullSetC\Game\Active\BrownDust\BrownDust2\spine\cutscenes";
+            string bg = @"F:\FullSetC\Game\Active\BrownDust\outbg2";
+            SortCutsceneBGs(og, bg);
+
+			//DeleteUnnecessary(loc);
+   //         RenameSpine(loc);
+   //         SortSpine(loc);
+   //         SortAsset(loc);
             Console.ReadLine();
             
         }
@@ -117,6 +123,29 @@ namespace DeleteUn
             }
             Console.WriteLine($"Move {check} files in total of {total}");
         }
+
+        public static void SortCutsceneBGs(string ogPath, string assetPath)
+        {
+            // assuming there's no number before id in path
+            var idList = Directory.GetDirectories(ogPath, "*cutscene_char*");
+            int[] id = idList.Select(x => int.Parse(Regex.Match(Path.GetFileNameWithoutExtension(x), @"\d+").Value)).ToArray();
+			Regex bgCheck = new Regex(@"^((cha)r?)?[0-9]{5,6}");
+
+			var bgFirstFilter = Directory.GetFiles(assetPath, "*.png", SearchOption.AllDirectories)
+				                         .Where(x => bgCheck.IsMatch(Path.GetFileNameWithoutExtension(x).ToLower()))
+				                         .ToList();
+			Console.WriteLine("--------------------");
+			Console.WriteLine(bgFirstFilter.Count);
+            foreach (var bg in bgFirstFilter)
+            {
+				string expectedSubfolder = $"cutscene_char{int.Parse(Regex.Match(Path.GetFileNameWithoutExtension(bg), @"\d+").Value).ToString("D6")}";
+				if (Directory.Exists(Path.Combine(ogPath, expectedSubfolder)))
+                {
+					Console.WriteLine($"Move {bg} -> {Path.Combine(ogPath, expectedSubfolder)}");   
+                    File.Copy(bg, Path.Combine(ogPath, expectedSubfolder, Path.GetFileName(bg)), true);
+                }
+			}
+		}
     }
 
 
