@@ -1,20 +1,20 @@
 {
-    "Options": {
-        "Asset types": {
-            "Texture2D": true,
-            "Text Asset": true,
-            "Audio": false
-        },
-        "Process": {
-            "Export asset": true,
-            "Sort asset": true,
-            "Export l2d bgs": true,
-            "Copy to repo": false,
-            "Delete data": false
-        }
+  "options": {
+    "Asset types": {
+      "Texture2D": true,
+      "Text Asset": true,
+      "Audio": false
     },
-    "Paths": {
-        "Data": "F:\\FullSetC\\Game\\Active\\BrownDust\\data",
-        "Output": "F:\\FullSetC\\Game\\Active\\BrownDust\\out"
+    "Process": {
+      "Export asset": true,
+      "Sort asset": true,
+      "Export l2d bgs": true,
+      "Copy to repo": false,
+      "Delete data": false
     }
+  },
+  "paths": {
+    "Data": "F:\\FullSetC\\Game\\Active\\BrownDust\\data",
+    "Output": "F:\\FullSetC\\Game\\Active\\BrownDust\\out"
+  }
 }

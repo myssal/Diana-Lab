@@ -10,7 +10,7 @@ namespace BD2.GUI
 {
 	public class LoadUpSettings
 	{
-		string settingsPath = "settings.json";
+		string settingsPath = @"F:\FullSetC\Tool\Game\Brown Dust\ExtractAsset\BD2.GUI\settings.json";
 		public bool isSettingsJsonExist { get; set; }
 		public Root settings { get; set; }
 		public LoadUpSettings()
@@ -30,6 +30,11 @@ namespace BD2.GUI
 			}
 		}
 
+		public void SaveSettings()
+		{
+			string json = JsonConvert.SerializeObject(settings, Formatting.Indented);
+			File.WriteAllText(settingsPath, json);
+		}
 		public class AssetTypes
 		{
 			public bool Texture2D { get; set; }

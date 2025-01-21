@@ -119,6 +119,7 @@
 			this.dataFolder_folderDialog.TabIndex = 5;
 			this.dataFolder_folderDialog.Text = "...";
 			this.dataFolder_folderDialog.UseVisualStyleBackColor = true;
+			this.dataFolder_folderDialog.Click += new System.EventHandler(this.dataFolder_folderDialog_Click);
 			// 
 			// outputFolder_folderDialog
 			// 
@@ -128,6 +129,7 @@
 			this.outputFolder_folderDialog.TabIndex = 6;
 			this.outputFolder_folderDialog.Text = "...";
 			this.outputFolder_folderDialog.UseVisualStyleBackColor = true;
+			this.outputFolder_folderDialog.Click += new System.EventHandler(this.outputFolder_folderDialog_Click);
 			// 
 			// groupBox2
 			// 
@@ -176,6 +178,7 @@
 			this.saveSettings_btn.TabIndex = 18;
 			this.saveSettings_btn.Text = "Save settings";
 			this.saveSettings_btn.UseVisualStyleBackColor = true;
+			this.saveSettings_btn.Click += new System.EventHandler(this.saveSettings_btn_Click);
 			// 
 			// start_btn
 			// 
@@ -185,6 +188,7 @@
 			this.start_btn.TabIndex = 17;
 			this.start_btn.Text = "Start";
 			this.start_btn.UseVisualStyleBackColor = true;
+			this.start_btn.Click += new System.EventHandler(this.start_btn_Click);
 			// 
 			// reset_btn
 			// 

@@ -22,11 +22,6 @@ namespace BD2Logic
             Console.ReadLine();
             
         }
-
-        public static void GetFiles(string path)
-        {
-
-        }
         public static void DeleteUnnecessary(string path)
         {
             List<string> deleteList = File.ReadAllLines("delete.txt").ToList();
