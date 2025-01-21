@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
-namespace DeleteUn
+namespace BD2Logic
 {
     internal class Program
     {
