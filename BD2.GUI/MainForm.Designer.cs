@@ -1,6 +1,6 @@
 ﻿namespace BD2.GUI
 {
-	partial class Form1
+	partial class MainForm
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -28,30 +28,30 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
-			this.textBox1 = new System.Windows.Forms.TextBox();
-			this.textBox2 = new System.Windows.Forms.TextBox();
-			this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+			this.outputLog_txtBox = new System.Windows.Forms.RichTextBox();
+			this.dataFolder_txtBox = new System.Windows.Forms.TextBox();
+			this.outputFolder_txtBox = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
-			this.button1 = new System.Windows.Forms.Button();
-			this.button2 = new System.Windows.Forms.Button();
+			this.dataFolder_folderDialog = new System.Windows.Forms.Button();
+			this.outputFolder_folderDialog = new System.Windows.Forms.Button();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
-			this.label3 = new System.Windows.Forms.Label();
-			this.checkBox1 = new System.Windows.Forms.CheckBox();
-			this.checkBox2 = new System.Windows.Forms.CheckBox();
-			this.checkBox3 = new System.Windows.Forms.CheckBox();
+			this.saveSettings_btn = new System.Windows.Forms.Button();
+			this.start_btn = new System.Windows.Forms.Button();
+			this.reset_btn = new System.Windows.Forms.Button();
+			this.exportL2DBgs_checkBox = new System.Windows.Forms.CheckBox();
+			this.deleteTemp_checkBox = new System.Windows.Forms.CheckBox();
+			this.copy2Repo_checkBox = new System.Windows.Forms.CheckBox();
+			this.sortAsset_checkBox = new System.Windows.Forms.CheckBox();
+			this.exportAsset_checkBox = new System.Windows.Forms.CheckBox();
 			this.label4 = new System.Windows.Forms.Label();
-			this.checkBox4 = new System.Windows.Forms.CheckBox();
-			this.checkBox5 = new System.Windows.Forms.CheckBox();
-			this.checkBox6 = new System.Windows.Forms.CheckBox();
-			this.checkBox7 = new System.Windows.Forms.CheckBox();
-			this.checkBox8 = new System.Windows.Forms.CheckBox();
-			this.button3 = new System.Windows.Forms.Button();
-			this.button4 = new System.Windows.Forms.Button();
-			this.button5 = new System.Windows.Forms.Button();
+			this.audio_checkBox = new System.Windows.Forms.CheckBox();
+			this.txtAsset_checkBox = new System.Windows.Forms.CheckBox();
+			this.tex2d_checkBox = new System.Windows.Forms.CheckBox();
+			this.label3 = new System.Windows.Forms.Label();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
 			this.groupBox3.SuspendLayout();
@@ -59,7 +59,7 @@
 			// 
 			// groupBox1
 			// 
-			this.groupBox1.Controls.Add(this.richTextBox1);
+			this.groupBox1.Controls.Add(this.outputLog_txtBox);
 			this.groupBox1.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.groupBox1.Location = new System.Drawing.Point(0, 355);
@@ -69,29 +69,29 @@
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Output log";
 			// 
-			// textBox1
+			// outputLog_txtBox
 			// 
-			this.textBox1.Location = new System.Drawing.Point(167, 36);
-			this.textBox1.Name = "textBox1";
-			this.textBox1.Size = new System.Drawing.Size(518, 27);
-			this.textBox1.TabIndex = 1;
+			this.outputLog_txtBox.Enabled = false;
+			this.outputLog_txtBox.Location = new System.Drawing.Point(28, 29);
+			this.outputLog_txtBox.Name = "outputLog_txtBox";
+			this.outputLog_txtBox.ReadOnly = true;
+			this.outputLog_txtBox.Size = new System.Drawing.Size(715, 269);
+			this.outputLog_txtBox.TabIndex = 0;
+			this.outputLog_txtBox.Text = "";
 			// 
-			// textBox2
+			// dataFolder_txtBox
 			// 
-			this.textBox2.Location = new System.Drawing.Point(167, 83);
-			this.textBox2.Name = "textBox2";
-			this.textBox2.Size = new System.Drawing.Size(518, 27);
-			this.textBox2.TabIndex = 2;
+			this.dataFolder_txtBox.Location = new System.Drawing.Point(167, 36);
+			this.dataFolder_txtBox.Name = "dataFolder_txtBox";
+			this.dataFolder_txtBox.Size = new System.Drawing.Size(518, 27);
+			this.dataFolder_txtBox.TabIndex = 1;
 			// 
-			// richTextBox1
+			// outputFolder_txtBox
 			// 
-			this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.richTextBox1.Location = new System.Drawing.Point(28, 29);
-			this.richTextBox1.Name = "richTextBox1";
-			this.richTextBox1.ReadOnly = true;
-			this.richTextBox1.Size = new System.Drawing.Size(715, 269);
-			this.richTextBox1.TabIndex = 0;
-			this.richTextBox1.Text = "";
+			this.outputFolder_txtBox.Location = new System.Drawing.Point(167, 83);
+			this.outputFolder_txtBox.Name = "outputFolder_txtBox";
+			this.outputFolder_txtBox.Size = new System.Drawing.Size(518, 27);
+			this.outputFolder_txtBox.TabIndex = 2;
 			// 
 			// label1
 			// 
@@ -111,30 +111,30 @@
 			this.label2.TabIndex = 4;
 			this.label2.Text = "Output folder:";
 			// 
-			// button1
+			// dataFolder_folderDialog
 			// 
-			this.button1.Location = new System.Drawing.Point(702, 36);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(41, 27);
-			this.button1.TabIndex = 5;
-			this.button1.Text = "...";
-			this.button1.UseVisualStyleBackColor = true;
+			this.dataFolder_folderDialog.Location = new System.Drawing.Point(702, 36);
+			this.dataFolder_folderDialog.Name = "dataFolder_folderDialog";
+			this.dataFolder_folderDialog.Size = new System.Drawing.Size(41, 27);
+			this.dataFolder_folderDialog.TabIndex = 5;
+			this.dataFolder_folderDialog.Text = "...";
+			this.dataFolder_folderDialog.UseVisualStyleBackColor = true;
 			// 
-			// button2
+			// outputFolder_folderDialog
 			// 
-			this.button2.Location = new System.Drawing.Point(702, 83);
-			this.button2.Name = "button2";
-			this.button2.Size = new System.Drawing.Size(41, 27);
-			this.button2.TabIndex = 6;
-			this.button2.Text = "...";
-			this.button2.UseVisualStyleBackColor = true;
+			this.outputFolder_folderDialog.Location = new System.Drawing.Point(702, 83);
+			this.outputFolder_folderDialog.Name = "outputFolder_folderDialog";
+			this.outputFolder_folderDialog.Size = new System.Drawing.Size(41, 27);
+			this.outputFolder_folderDialog.TabIndex = 6;
+			this.outputFolder_folderDialog.Text = "...";
+			this.outputFolder_folderDialog.UseVisualStyleBackColor = true;
 			// 
 			// groupBox2
 			// 
-			this.groupBox2.Controls.Add(this.textBox1);
-			this.groupBox2.Controls.Add(this.button2);
-			this.groupBox2.Controls.Add(this.textBox2);
-			this.groupBox2.Controls.Add(this.button1);
+			this.groupBox2.Controls.Add(this.dataFolder_txtBox);
+			this.groupBox2.Controls.Add(this.outputFolder_folderDialog);
+			this.groupBox2.Controls.Add(this.outputFolder_txtBox);
+			this.groupBox2.Controls.Add(this.dataFolder_folderDialog);
 			this.groupBox2.Controls.Add(this.label1);
 			this.groupBox2.Controls.Add(this.label2);
 			this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
@@ -147,18 +147,18 @@
 			// 
 			// groupBox3
 			// 
-			this.groupBox3.Controls.Add(this.button5);
-			this.groupBox3.Controls.Add(this.button4);
-			this.groupBox3.Controls.Add(this.button3);
-			this.groupBox3.Controls.Add(this.checkBox8);
-			this.groupBox3.Controls.Add(this.checkBox7);
-			this.groupBox3.Controls.Add(this.checkBox6);
-			this.groupBox3.Controls.Add(this.checkBox5);
-			this.groupBox3.Controls.Add(this.checkBox4);
+			this.groupBox3.Controls.Add(this.saveSettings_btn);
+			this.groupBox3.Controls.Add(this.start_btn);
+			this.groupBox3.Controls.Add(this.reset_btn);
+			this.groupBox3.Controls.Add(this.exportL2DBgs_checkBox);
+			this.groupBox3.Controls.Add(this.deleteTemp_checkBox);
+			this.groupBox3.Controls.Add(this.copy2Repo_checkBox);
+			this.groupBox3.Controls.Add(this.sortAsset_checkBox);
+			this.groupBox3.Controls.Add(this.exportAsset_checkBox);
 			this.groupBox3.Controls.Add(this.label4);
-			this.groupBox3.Controls.Add(this.checkBox3);
-			this.groupBox3.Controls.Add(this.checkBox2);
-			this.groupBox3.Controls.Add(this.checkBox1);
+			this.groupBox3.Controls.Add(this.audio_checkBox);
+			this.groupBox3.Controls.Add(this.txtAsset_checkBox);
+			this.groupBox3.Controls.Add(this.tex2d_checkBox);
 			this.groupBox3.Controls.Add(this.label3);
 			this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.groupBox3.Location = new System.Drawing.Point(0, 129);
@@ -168,56 +168,98 @@
 			this.groupBox3.TabStop = false;
 			this.groupBox3.Text = "Options";
 			// 
-			// label3
+			// saveSettings_btn
 			// 
-			this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			this.saveSettings_btn.Location = new System.Drawing.Point(395, 171);
+			this.saveSettings_btn.Name = "saveSettings_btn";
+			this.saveSettings_btn.Size = new System.Drawing.Size(153, 30);
+			this.saveSettings_btn.TabIndex = 18;
+			this.saveSettings_btn.Text = "Save settings";
+			this.saveSettings_btn.UseVisualStyleBackColor = true;
+			// 
+			// start_btn
+			// 
+			this.start_btn.Location = new System.Drawing.Point(581, 171);
+			this.start_btn.Name = "start_btn";
+			this.start_btn.Size = new System.Drawing.Size(96, 30);
+			this.start_btn.TabIndex = 17;
+			this.start_btn.Text = "Start";
+			this.start_btn.UseVisualStyleBackColor = true;
+			// 
+			// reset_btn
+			// 
+			this.reset_btn.Location = new System.Drawing.Point(278, 171);
+			this.reset_btn.Name = "reset_btn";
+			this.reset_btn.Size = new System.Drawing.Size(96, 30);
+			this.reset_btn.TabIndex = 16;
+			this.reset_btn.Text = "Reset";
+			this.reset_btn.UseVisualStyleBackColor = true;
+			this.reset_btn.Click += new System.EventHandler(this.reset_btn_Click);
+			// 
+			// exportL2DBgs_checkBox
+			// 
+			this.exportL2DBgs_checkBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(25, 34);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(107, 20);
-			this.label3.TabIndex = 4;
-			this.label3.Text = "Export types:";
+			this.exportL2DBgs_checkBox.AutoSize = true;
+			this.exportL2DBgs_checkBox.Location = new System.Drawing.Point(395, 76);
+			this.exportL2DBgs_checkBox.Name = "exportL2DBgs_checkBox";
+			this.exportL2DBgs_checkBox.Size = new System.Drawing.Size(138, 24);
+			this.exportL2DBgs_checkBox.TabIndex = 15;
+			this.exportL2DBgs_checkBox.Text = "Export l2d bgs";
+			this.exportL2DBgs_checkBox.UseVisualStyleBackColor = true;
 			// 
-			// checkBox1
+			// deleteTemp_checkBox
 			// 
-			this.checkBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			this.deleteTemp_checkBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.checkBox1.AutoSize = true;
-			this.checkBox1.Location = new System.Drawing.Point(44, 76);
-			this.checkBox1.Name = "checkBox1";
-			this.checkBox1.Size = new System.Drawing.Size(109, 24);
-			this.checkBox1.TabIndex = 7;
-			this.checkBox1.Text = "Texture2D";
-			this.checkBox1.UseVisualStyleBackColor = true;
+			this.deleteTemp_checkBox.AutoSize = true;
+			this.deleteTemp_checkBox.Location = new System.Drawing.Point(395, 118);
+			this.deleteTemp_checkBox.Name = "deleteTemp_checkBox";
+			this.deleteTemp_checkBox.Size = new System.Drawing.Size(247, 24);
+			this.deleteTemp_checkBox.TabIndex = 14;
+			this.deleteTemp_checkBox.Text = "Delete data and temp folders";
+			this.deleteTemp_checkBox.UseVisualStyleBackColor = true;
 			// 
-			// checkBox2
+			// copy2Repo_checkBox
 			// 
-			this.checkBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			this.copy2Repo_checkBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.checkBox2.AutoSize = true;
-			this.checkBox2.Location = new System.Drawing.Point(44, 118);
-			this.checkBox2.Name = "checkBox2";
-			this.checkBox2.Size = new System.Drawing.Size(111, 24);
-			this.checkBox2.TabIndex = 8;
-			this.checkBox2.Text = "Text Asset";
-			this.checkBox2.UseVisualStyleBackColor = true;
+			this.copy2Repo_checkBox.AutoSize = true;
+			this.copy2Repo_checkBox.Location = new System.Drawing.Point(581, 76);
+			this.copy2Repo_checkBox.Name = "copy2Repo_checkBox";
+			this.copy2Repo_checkBox.Size = new System.Drawing.Size(126, 24);
+			this.copy2Repo_checkBox.TabIndex = 13;
+			this.copy2Repo_checkBox.Text = "Copy to repo";
+			this.copy2Repo_checkBox.UseVisualStyleBackColor = true;
 			// 
-			// checkBox3
+			// sortAsset_checkBox
 			// 
-			this.checkBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			this.sortAsset_checkBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.checkBox3.AutoSize = true;
-			this.checkBox3.Location = new System.Drawing.Point(44, 160);
-			this.checkBox3.Name = "checkBox3";
-			this.checkBox3.Size = new System.Drawing.Size(73, 24);
-			this.checkBox3.TabIndex = 9;
-			this.checkBox3.Text = "Audio";
-			this.checkBox3.UseVisualStyleBackColor = true;
+			this.sortAsset_checkBox.AutoSize = true;
+			this.sortAsset_checkBox.Location = new System.Drawing.Point(239, 118);
+			this.sortAsset_checkBox.Name = "sortAsset_checkBox";
+			this.sortAsset_checkBox.Size = new System.Drawing.Size(108, 24);
+			this.sortAsset_checkBox.TabIndex = 12;
+			this.sortAsset_checkBox.Text = "Sort asset";
+			this.sortAsset_checkBox.UseVisualStyleBackColor = true;
+			// 
+			// exportAsset_checkBox
+			// 
+			this.exportAsset_checkBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.exportAsset_checkBox.AutoSize = true;
+			this.exportAsset_checkBox.Location = new System.Drawing.Point(239, 76);
+			this.exportAsset_checkBox.Name = "exportAsset_checkBox";
+			this.exportAsset_checkBox.Size = new System.Drawing.Size(125, 24);
+			this.exportAsset_checkBox.TabIndex = 11;
+			this.exportAsset_checkBox.Text = "Export asset";
+			this.exportAsset_checkBox.UseVisualStyleBackColor = true;
 			// 
 			// label4
 			// 
@@ -231,99 +273,59 @@
 			this.label4.TabIndex = 10;
 			this.label4.Text = "Process:";
 			// 
-			// checkBox4
+			// audio_checkBox
 			// 
-			this.checkBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			this.audio_checkBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.checkBox4.AutoSize = true;
-			this.checkBox4.Location = new System.Drawing.Point(239, 76);
-			this.checkBox4.Name = "checkBox4";
-			this.checkBox4.Size = new System.Drawing.Size(125, 24);
-			this.checkBox4.TabIndex = 11;
-			this.checkBox4.Text = "Export asset";
-			this.checkBox4.UseVisualStyleBackColor = true;
+			this.audio_checkBox.AutoSize = true;
+			this.audio_checkBox.Enabled = false;
+			this.audio_checkBox.Location = new System.Drawing.Point(44, 160);
+			this.audio_checkBox.Name = "audio_checkBox";
+			this.audio_checkBox.Size = new System.Drawing.Size(73, 24);
+			this.audio_checkBox.TabIndex = 9;
+			this.audio_checkBox.Text = "Audio";
+			this.audio_checkBox.UseVisualStyleBackColor = true;
 			// 
-			// checkBox5
+			// txtAsset_checkBox
 			// 
-			this.checkBox5.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			this.txtAsset_checkBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.checkBox5.AutoSize = true;
-			this.checkBox5.Location = new System.Drawing.Point(239, 118);
-			this.checkBox5.Name = "checkBox5";
-			this.checkBox5.Size = new System.Drawing.Size(108, 24);
-			this.checkBox5.TabIndex = 12;
-			this.checkBox5.Text = "Sort asset";
-			this.checkBox5.UseVisualStyleBackColor = true;
+			this.txtAsset_checkBox.AutoSize = true;
+			this.txtAsset_checkBox.Location = new System.Drawing.Point(44, 118);
+			this.txtAsset_checkBox.Name = "txtAsset_checkBox";
+			this.txtAsset_checkBox.Size = new System.Drawing.Size(111, 24);
+			this.txtAsset_checkBox.TabIndex = 8;
+			this.txtAsset_checkBox.Text = "Text Asset";
+			this.txtAsset_checkBox.UseVisualStyleBackColor = true;
 			// 
-			// checkBox6
+			// tex2d_checkBox
 			// 
-			this.checkBox6.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			this.tex2d_checkBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.checkBox6.AutoSize = true;
-			this.checkBox6.Location = new System.Drawing.Point(581, 76);
-			this.checkBox6.Name = "checkBox6";
-			this.checkBox6.Size = new System.Drawing.Size(126, 24);
-			this.checkBox6.TabIndex = 13;
-			this.checkBox6.Text = "Copy to repo";
-			this.checkBox6.UseVisualStyleBackColor = true;
+			this.tex2d_checkBox.AutoSize = true;
+			this.tex2d_checkBox.Location = new System.Drawing.Point(44, 76);
+			this.tex2d_checkBox.Name = "tex2d_checkBox";
+			this.tex2d_checkBox.Size = new System.Drawing.Size(109, 24);
+			this.tex2d_checkBox.TabIndex = 7;
+			this.tex2d_checkBox.Text = "Texture2D";
+			this.tex2d_checkBox.UseVisualStyleBackColor = true;
 			// 
-			// checkBox7
+			// label3
 			// 
-			this.checkBox7.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.checkBox7.AutoSize = true;
-			this.checkBox7.Location = new System.Drawing.Point(395, 118);
-			this.checkBox7.Name = "checkBox7";
-			this.checkBox7.Size = new System.Drawing.Size(247, 24);
-			this.checkBox7.TabIndex = 14;
-			this.checkBox7.Text = "Delete data and temp folders";
-			this.checkBox7.UseVisualStyleBackColor = true;
+			this.label3.AutoSize = true;
+			this.label3.Location = new System.Drawing.Point(25, 34);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(107, 20);
+			this.label3.TabIndex = 4;
+			this.label3.Text = "Export types:";
 			// 
-			// checkBox8
-			// 
-			this.checkBox8.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.checkBox8.AutoSize = true;
-			this.checkBox8.Location = new System.Drawing.Point(395, 76);
-			this.checkBox8.Name = "checkBox8";
-			this.checkBox8.Size = new System.Drawing.Size(138, 24);
-			this.checkBox8.TabIndex = 15;
-			this.checkBox8.Text = "Export l2d bgs";
-			this.checkBox8.UseVisualStyleBackColor = true;
-			// 
-			// button3
-			// 
-			this.button3.Location = new System.Drawing.Point(251, 171);
-			this.button3.Name = "button3";
-			this.button3.Size = new System.Drawing.Size(96, 30);
-			this.button3.TabIndex = 16;
-			this.button3.Text = "Reset";
-			this.button3.UseVisualStyleBackColor = true;
-			// 
-			// button4
-			// 
-			this.button4.Location = new System.Drawing.Point(380, 171);
-			this.button4.Name = "button4";
-			this.button4.Size = new System.Drawing.Size(96, 30);
-			this.button4.TabIndex = 17;
-			this.button4.Text = "Start";
-			this.button4.UseVisualStyleBackColor = true;
-			// 
-			// button5
-			// 
-			this.button5.Location = new System.Drawing.Point(518, 171);
-			this.button5.Name = "button5";
-			this.button5.Size = new System.Drawing.Size(96, 30);
-			this.button5.TabIndex = 18;
-			this.button5.Text = "Settings";
-			this.button5.UseVisualStyleBackColor = true;
-			// 
-			// Form1
+			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 20F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -333,9 +335,10 @@
 			this.Controls.Add(this.groupBox1);
 			this.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.Name = "Form1";
+			this.Name = "MainForm";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Brown Dust 2 Tool v1.0";
+			this.Load += new System.EventHandler(this.Form1_Load);
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox2.ResumeLayout(false);
 			this.groupBox2.PerformLayout();
@@ -348,28 +351,28 @@
 		#endregion
 
 		private System.Windows.Forms.GroupBox groupBox1;
-		private System.Windows.Forms.RichTextBox richTextBox1;
-		private System.Windows.Forms.TextBox textBox1;
-		private System.Windows.Forms.TextBox textBox2;
+		private System.Windows.Forms.RichTextBox outputLog_txtBox;
+		private System.Windows.Forms.TextBox dataFolder_txtBox;
+		private System.Windows.Forms.TextBox outputFolder_txtBox;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.Button button1;
-		private System.Windows.Forms.Button button2;
+		private System.Windows.Forms.Button dataFolder_folderDialog;
+		private System.Windows.Forms.Button outputFolder_folderDialog;
 		private System.Windows.Forms.GroupBox groupBox2;
 		private System.Windows.Forms.GroupBox groupBox3;
-		private System.Windows.Forms.CheckBox checkBox6;
-		private System.Windows.Forms.CheckBox checkBox5;
-		private System.Windows.Forms.CheckBox checkBox4;
+		private System.Windows.Forms.CheckBox copy2Repo_checkBox;
+		private System.Windows.Forms.CheckBox sortAsset_checkBox;
+		private System.Windows.Forms.CheckBox exportAsset_checkBox;
 		private System.Windows.Forms.Label label4;
-		private System.Windows.Forms.CheckBox checkBox3;
-		private System.Windows.Forms.CheckBox checkBox2;
-		private System.Windows.Forms.CheckBox checkBox1;
+		private System.Windows.Forms.CheckBox audio_checkBox;
+		private System.Windows.Forms.CheckBox txtAsset_checkBox;
+		private System.Windows.Forms.CheckBox tex2d_checkBox;
 		private System.Windows.Forms.Label label3;
-		private System.Windows.Forms.CheckBox checkBox8;
-		private System.Windows.Forms.CheckBox checkBox7;
-		private System.Windows.Forms.Button button4;
-		private System.Windows.Forms.Button button3;
-		private System.Windows.Forms.Button button5;
+		private System.Windows.Forms.CheckBox exportL2DBgs_checkBox;
+		private System.Windows.Forms.CheckBox deleteTemp_checkBox;
+		private System.Windows.Forms.Button start_btn;
+		private System.Windows.Forms.Button reset_btn;
+		private System.Windows.Forms.Button saveSettings_btn;
 	}
 }
 
