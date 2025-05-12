@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helper\AssetsProcess.cs" />
     <Compile Include="Helper\Settings.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>

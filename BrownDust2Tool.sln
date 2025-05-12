@@ -5,7 +5,7 @@ VisualStudioVersion = 17.10.35027.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BD2Logic", "BD2Logic\BD2Logic.csproj", "{84E330A4-A302-455D-8AFD-5E03DD2C0A78}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BD2.GUI", "BD2.GUI\BD2.GUI.csproj", "{7765E920-6AD0-4211-A034-DF834B6208ED}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BD2Tools", "BD2Tools\BD2Tools.csproj", "{4F451D5D-DB76-40F6-B722-D5F15DE5A645}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{84E330A4-A302-455D-8AFD-5E03DD2C0A78}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84E330A4-A302-455D-8AFD-5E03DD2C0A78}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84E330A4-A302-455D-8AFD-5E03DD2C0A78}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7765E920-6AD0-4211-A034-DF834B6208ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7765E920-6AD0-4211-A034-DF834B6208ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7765E920-6AD0-4211-A034-DF834B6208ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7765E920-6AD0-4211-A034-DF834B6208ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F451D5D-DB76-40F6-B722-D5F15DE5A645}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F451D5D-DB76-40F6-B722-D5F15DE5A645}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F451D5D-DB76-40F6-B722-D5F15DE5A645}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F451D5D-DB76-40F6-B722-D5F15DE5A645}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

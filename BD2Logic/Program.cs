@@ -12,9 +12,10 @@ namespace BD2Logic
         {
             //string loc = args[0];
             string og = @"F:\FullSetC\Game\Active\BrownDust\BrownDust2\spine\cutscenes";
-            string bg = @"F:\FullSetC\Game\Active\BrownDust\outbg2";
-            SortCutsceneBGs(og, bg);
-
+            string bg = @"F:\FullSetC\Game\Active\BrownDust\out";
+            //SortCutsceneBGs(og, bg);
+            //FilterAtlas(@"F:\FullSetC\Game\Active\BrownDust\BrownDust2\ui\atlas", @"F:\FullSetC\Temp\output.txt");
+            DeleteAtlas(@"F:\FullSetC\Game\Active\BrownDust\BrownDust2\ui\atlas");
 			//DeleteUnnecessary(loc);
    //         RenameSpine(loc);
    //         SortSpine(loc);
@@ -141,6 +142,88 @@ namespace BD2Logic
                 }
 			}
 		}
+        
+        public static void FilterAtlas(string filePath, string outputPath)
+        {
+            var files = Directory.GetFiles(filePath, "*.png", SearchOption.AllDirectories).ToList();
+            var groupedFiles = new Dictionary<string, List<string>>();
+            foreach (var file in files)
+            {
+                string fileNameWithoutExt = Path.GetFileNameWithoutExtension(file);
+                int lastDashIndex = fileNameWithoutExt.LastIndexOf('-');
+
+                if (lastDashIndex > 0)
+                {
+                    string prefix = fileNameWithoutExt.Substring(0, lastDashIndex);
+                    string suffix = fileNameWithoutExt.Substring(lastDashIndex + 1);
+
+                    if (!groupedFiles.ContainsKey(prefix))
+                    {
+                        groupedFiles[prefix] = new List<string>();
+                    }
+
+                    groupedFiles[prefix].Add(suffix);
+                }
+            }
+            
+            using (StreamWriter writer = new StreamWriter(outputPath))
+            {
+                foreach (var group in groupedFiles)
+                {
+                    writer.WriteLine($"Prefix: {group.Key}");
+                    foreach (var suffix in group.Value)
+                    {
+                        writer.WriteLine($"  Suffix: {suffix}");
+                    }
+                }
+            }
+        }
+
+        public static void DeleteAtlas(string directoryPath)
+        {
+            var allFiles = Directory.GetFiles(directoryPath, "*.png");
+            var groupedFiles = new Dictionary<string, List<FileInfo>>();
+
+            foreach (var filePath in allFiles)
+            {
+                string fileName = Path.GetFileNameWithoutExtension(filePath);
+                int lastDashIndex = fileName.LastIndexOf('-');
+
+                if (lastDashIndex > 0)
+                {
+                    string prefix = fileName.Substring(0, lastDashIndex);
+                    FileInfo fileInfo = new FileInfo(filePath);
+
+                    if (!groupedFiles.ContainsKey(prefix))
+                    {
+                        groupedFiles[prefix] = new List<FileInfo>();
+                    }
+
+                    groupedFiles[prefix].Add(fileInfo);
+                }
+            }
+
+            // Delete all files in each group except the most recently modified
+            foreach (var group in groupedFiles)
+            {
+                var filesByDate = group.Value.OrderByDescending(f => f.LastWriteTime).ToList();
+
+                for (int i = 1; i < filesByDate.Count; i++) // Keep the first (most recent)
+                {
+                    try
+                    {
+                        filesByDate[i].Delete();
+                        Console.WriteLine($"Deleted: {filesByDate[i].FullName}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Failed to delete {filesByDate[i].FullName}: {ex.Message}");
+                    }
+                }
+            }
+
+            Console.WriteLine("Cleanup complete (kept most recent file per group).");
+        }
     }
 
 
