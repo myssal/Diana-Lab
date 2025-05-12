@@ -16,12 +16,13 @@ class Program
             {
                 logging.ClearProviders();
                 logging.AddConsole();
-                logging.SetMinimumLevel(LogLevel.Debug);
+                logging.SetMinimumLevel(LogLevel.Information);
             })
             .Build();
 
         // Resolve and run the service
-        var service = host.Services.GetRequiredService<AssetLogic>();
-        service.GetConfigureData();
+        var assetLogic = host.Services.GetRequiredService<AssetLogic>();
+        assetLogic.MoveFiles();
+        assetLogic.ExtractAsset();
     }
 }
