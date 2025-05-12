@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace BD2Tools;
 
@@ -50,5 +51,28 @@ public class Helper
         process.StartInfo = info;
         process.Start();
         process.WaitForExit();
+    }
+    
+    public static void SortCutsceneBGs(string ogPath, string assetPath)
+    {
+        // assuming there's no number before id in path
+        var idList = Directory.GetDirectories(ogPath, "*cutscene_char*");
+        int[] id = idList.Select(x => int.Parse(Regex.Match(Path.GetFileNameWithoutExtension(x), @"\d+").Value)).ToArray();
+        Regex bgCheck = new Regex(@"^((cha)r?)?[0-9]{5,6}");
+
+        var bgFirstFilter = Directory.GetFiles(assetPath, "*.png", SearchOption.AllDirectories)
+            .Where(x => bgCheck.IsMatch(Path.GetFileNameWithoutExtension(x).ToLower()))
+            .ToList();
+        Console.WriteLine("--------------------");
+        Console.WriteLine(bgFirstFilter.Count);
+        foreach (var bg in bgFirstFilter)
+        {
+            string expectedSubfolder = $"cutscene_char{int.Parse(Regex.Match(Path.GetFileNameWithoutExtension(bg), @"\d+").Value).ToString("D6")}";
+            if (Directory.Exists(Path.Combine(ogPath, expectedSubfolder)))
+            {
+                Console.WriteLine($"Move {bg} -> {Path.Combine(ogPath, expectedSubfolder)}");   
+                File.Copy(bg, Path.Combine(ogPath, expectedSubfolder, Path.GetFileName(bg)), true);
+            }
+        }
     }
 }
