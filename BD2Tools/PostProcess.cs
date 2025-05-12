@@ -34,6 +34,7 @@ public partial class AssetLogic
     {
         Logger.LogInformation($"Start renaming spine");
         List<string> spineFile = Directory.GetFiles(config["output"], "*.asset*", SearchOption.TopDirectoryOnly).ToList();
+        spineFile.AddRange(Directory.GetFiles(config["output"], "*.prefab*", SearchOption.TopDirectoryOnly).ToList());
         foreach (string fileItem in spineFile)
         {
             Logger.LogInformation($"Rename spine file: {Path.GetFileName(fileItem)}");
@@ -42,63 +43,77 @@ public partial class AssetLogic
     }
     
     public void SortSpine()
+{
+    Logger.LogInformation("Start sorting spine.");
+    string outputPath = config["output"];
+    string spineDir = Path.Combine(outputPath, "spine");
+    
+    if (!Directory.Exists(spineDir))
     {
-        Logger.LogInformation($"Start sorting spine.");
-        string outputPath = config["output"];
-        string spineDir = Path.Combine(outputPath, "spine");
+        Directory.CreateDirectory(spineDir);
+    }
 
-        // Create 'spine' directory if it doesn't exist
-        if (!Directory.Exists(spineDir))
+    // Get all .atlas files
+    var atlasFiles = Directory.GetFiles(outputPath, "*.atlas*", SearchOption.TopDirectoryOnly);
+
+    foreach (string atlasPath in atlasFiles)
+    {
+        string[] atlasContent = File.ReadAllLines(atlasPath);
+        var textureFiles = atlasContent.Where(line => line.Contains(".png")).ToArray();
+        Logger.LogInformation($"Found {textureFiles.Length} textures in {Path.GetFileName(atlasPath)}.");
+
+        string baseFileName = Path.GetFileNameWithoutExtension(atlasPath);
+        string targetSubDir = Path.Combine(spineDir, baseFileName.ToLower());
+
+        Directory.CreateDirectory(targetSubDir);
+
+        try
         {
-            Directory.CreateDirectory(spineDir);
+            // Move .atlas file
+            string targetAtlasPath = Path.Combine(targetSubDir, $"{baseFileName}.atlas");
+            Logger.LogInformation($"Moving atlas: {atlasPath} -> {targetAtlasPath}");
+            File.Move(atlasPath, targetAtlasPath, overwrite: true);
+
+            // Move .skel file
+            string skelPath = Path.Combine(outputPath, $"{baseFileName}.skel");
+            string targetSkelPath = Path.Combine(targetSubDir, $"{baseFileName}.skel");
+            Logger.LogInformation($"Moving skeleton: {skelPath} -> {targetSkelPath}");
+            File.Move(skelPath, targetSkelPath, overwrite: true);
+        }
+        catch (FileNotFoundException ex)
+        {
+            Logger.LogWarning($"Missing core file: {ex.FileName}");
+            continue; 
+        }
+        catch (Exception ex)
+        {
+            Logger.LogWarning($"Unexpected error during atlas/skel move: {ex.Message}");
+            continue;
         }
 
-        // Find all .atlas files in the output directory
-        var atlasFiles = Directory.GetFiles(outputPath, "*.atlas*", SearchOption.TopDirectoryOnly);
-
-        foreach (string atlasPath in atlasFiles)
+        // Move texture files (resilient per texture)
+        foreach (string textureName in textureFiles)
         {
-            string[] atlasContent = File.ReadAllLines(atlasPath);
-            var textureFiles = atlasContent.Where(line => line.Contains(".png")).ToArray();
-            Logger.LogInformation($"Found {textureFiles.Length} textures in {Path.GetFileName(atlasPath)}.");
-
-            string baseFileName = Path.GetFileNameWithoutExtension(atlasPath);
-            string targetSubDir = Path.Combine(spineDir, baseFileName.ToLower());
-
-            Directory.CreateDirectory(targetSubDir);
-
             try
             {
-                // Move .atlas file
-                string targetAtlasPath = Path.Combine(targetSubDir, $"{baseFileName}.atlas");
-                Logger.LogInformation($"Moving atlas: {atlasPath} -> {targetAtlasPath}");
-                File.Move(atlasPath, targetAtlasPath, overwrite: true);
-
-                // Move corresponding .skel file
-                string skelPath = Path.Combine(outputPath, $"{baseFileName}.skel");
-                string targetSkelPath = Path.Combine(targetSubDir, $"{baseFileName}.skel");
-                Logger.LogInformation($"Moving skeleton: {skelPath} -> {targetSkelPath}");
-                File.Move(skelPath, targetSkelPath, overwrite: true);
-
-                // Move all associated texture files
-                foreach (string textureName in textureFiles)
-                {
-                    string sourceTexturePath = Path.Combine(outputPath, textureName);
-                    string targetTexturePath = Path.Combine(targetSubDir, Path.GetFileName(textureName));
-                    Logger.LogInformation($"Moving texture: {sourceTexturePath} -> {targetTexturePath}");
-                    File.Move(sourceTexturePath, targetTexturePath, overwrite: true);
-                }
+                string sourceTexturePath = Path.Combine(outputPath, textureName);
+                string targetTexturePath = Path.Combine(targetSubDir, Path.GetFileName(textureName));
+                Logger.LogInformation($"Moving texture: {sourceTexturePath} -> {targetTexturePath}");
+                File.Move(sourceTexturePath, targetTexturePath, overwrite: true);
             }
-            catch (FileNotFoundException ex)
+            catch (FileNotFoundException)
             {
-                Logger.LogInformation($"File not found: {ex.FileName}");
+                Logger.LogWarning($"Texture file not found: {textureName}");
+                continue;
             }
             catch (Exception ex)
             {
-                Logger.LogInformation($"Unexpected error: {ex.Message}");
+                Logger.LogWarning($"Error moving texture {textureName}: {ex.Message}");
+                continue;
             }
         }
     }
+}
 
     public void SortAsset()
     {
