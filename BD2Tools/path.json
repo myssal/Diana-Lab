@@ -160,6 +160,10 @@
 		"path": "ui/illust/illust_char"
 	},
 	{
+		"keyword": "illust_loop_char",
+		"path": "ui/illust/illust_loop_char"
+	},
+	{
 		"keyword": "illust_face",
 		"path": "ui/illust/illust_face"
 	},

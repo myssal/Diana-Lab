@@ -43,77 +43,80 @@ public partial class AssetLogic
     }
     
     public void SortSpine()
-{
-    Logger.LogInformation("Start sorting spine.");
-    string outputPath = config["output"];
-    string spineDir = Path.Combine(outputPath, "spine");
-    
-    if (!Directory.Exists(spineDir))
     {
-        Directory.CreateDirectory(spineDir);
-    }
-
-    // Get all .atlas files
-    var atlasFiles = Directory.GetFiles(outputPath, "*.atlas*", SearchOption.TopDirectoryOnly);
-
-    foreach (string atlasPath in atlasFiles)
-    {
-        string[] atlasContent = File.ReadAllLines(atlasPath);
-        var textureFiles = atlasContent.Where(line => line.Contains(".png")).ToArray();
-        Logger.LogInformation($"Found {textureFiles.Length} textures in {Path.GetFileName(atlasPath)}.");
-
-        string baseFileName = Path.GetFileNameWithoutExtension(atlasPath);
-        string targetSubDir = Path.Combine(spineDir, baseFileName.ToLower());
-
-        Directory.CreateDirectory(targetSubDir);
-
-        try
+        Logger.LogInformation("Start sorting spine.");
+        string outputPath = config["output"];
+        string spineDir = Path.Combine(outputPath, "spine");
+        
+        if (!Directory.Exists(spineDir))
         {
-            // Move .atlas file
-            string targetAtlasPath = Path.Combine(targetSubDir, $"{baseFileName}.atlas");
-            Logger.LogInformation($"Moving atlas: {atlasPath} -> {targetAtlasPath}");
-            File.Move(atlasPath, targetAtlasPath, overwrite: true);
-
-            // Move .skel file
-            string skelPath = Path.Combine(outputPath, $"{baseFileName}.skel");
-            string targetSkelPath = Path.Combine(targetSubDir, $"{baseFileName}.skel");
-            Logger.LogInformation($"Moving skeleton: {skelPath} -> {targetSkelPath}");
-            File.Move(skelPath, targetSkelPath, overwrite: true);
-        }
-        catch (FileNotFoundException ex)
-        {
-            Logger.LogWarning($"Missing core file: {ex.FileName}");
-            continue; 
-        }
-        catch (Exception ex)
-        {
-            Logger.LogWarning($"Unexpected error during atlas/skel move: {ex.Message}");
-            continue;
+            Directory.CreateDirectory(spineDir);
         }
 
-        // Move texture files (resilient per texture)
-        foreach (string textureName in textureFiles)
+        // Get all .atlas files
+        var atlasFiles = Directory.GetFiles(outputPath, "*.atlas*", SearchOption.TopDirectoryOnly);
+
+        foreach (string atlasPath in atlasFiles)
         {
+            string[] atlasContent = File.ReadAllLines(atlasPath);
+            var textureFiles = atlasContent.Where(line => line.Contains(".png")).ToList();
+            var textureBg = Directory.GetFiles(outputPath, $"*{Path.GetFileNameWithoutExtension(atlasPath)}_back*", 
+                SearchOption.TopDirectoryOnly).ToList();
+            textureFiles.AddRange(textureBg);
+            Logger.LogInformation($"Found {textureFiles.Count} textures in {Path.GetFileName(atlasPath)}.");
+
+            string baseFileName = Path.GetFileNameWithoutExtension(atlasPath);
+            string targetSubDir = Path.Combine(spineDir, baseFileName.ToLower());
+
+            Directory.CreateDirectory(targetSubDir);
+
             try
             {
-                string sourceTexturePath = Path.Combine(outputPath, textureName);
-                string targetTexturePath = Path.Combine(targetSubDir, Path.GetFileName(textureName));
-                Logger.LogInformation($"Moving texture: {sourceTexturePath} -> {targetTexturePath}");
-                File.Move(sourceTexturePath, targetTexturePath, overwrite: true);
+                // Move .atlas file
+                string targetAtlasPath = Path.Combine(targetSubDir, $"{baseFileName}.atlas");
+                Logger.LogInformation($"Moving atlas: {atlasPath} -> {targetAtlasPath}");
+                File.Move(atlasPath, targetAtlasPath, overwrite: true);
+
+                // Move .skel file
+                string skelPath = Path.Combine(outputPath, $"{baseFileName}.skel");
+                string targetSkelPath = Path.Combine(targetSubDir, $"{baseFileName}.skel");
+                Logger.LogInformation($"Moving skeleton: {skelPath} -> {targetSkelPath}");
+                File.Move(skelPath, targetSkelPath, overwrite: true);
             }
-            catch (FileNotFoundException)
+            catch (FileNotFoundException ex)
             {
-                Logger.LogWarning($"Texture file not found: {textureName}");
-                continue;
+                Logger.LogWarning($"Missing core file: {ex.FileName}");
+                continue; 
             }
             catch (Exception ex)
             {
-                Logger.LogWarning($"Error moving texture {textureName}: {ex.Message}");
+                Logger.LogWarning($"Unexpected error during atlas/skel move: {ex.Message}");
                 continue;
+            }
+
+            // Move texture files (resilient per texture)
+            foreach (string textureName in textureFiles)
+            {
+                try
+                {
+                    string sourceTexturePath = Path.Combine(outputPath, textureName);
+                    string targetTexturePath = Path.Combine(targetSubDir, Path.GetFileName(textureName));
+                    Logger.LogInformation($"Moving texture: {sourceTexturePath} -> {targetTexturePath}");
+                    File.Move(sourceTexturePath, targetTexturePath, overwrite: true);
+                }
+                catch (FileNotFoundException)
+                {
+                    Logger.LogWarning($"Texture file not found: {textureName}");
+                    continue;
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogWarning($"Error moving texture {textureName}: {ex.Message}");
+                    continue;
+                }
             }
         }
     }
-}
 
     public void SortAsset()
     {
@@ -168,5 +171,75 @@ public partial class AssetLogic
 
             Logger.LogInformation($"Moved {movedFiles} files out of {totalFiles}.");
         }
+    }
+    
+    public void OrganizeSpine()
+    {
+        string basePath = Path.Combine(config["output"], "spine");
+
+        if (!Directory.Exists(basePath))
+        {
+            Console.WriteLine($"Base path does not exist: {basePath}");
+            return;
+        }
+
+        string[] items;
+        try
+        {
+            items = Directory.GetDirectories(basePath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to read directories: {ex.Message}");
+            return;
+        }
+
+        foreach (string itemPath in items)
+        {
+            string folderName = Path.GetFileName(itemPath);
+            string destination = GetDestinationPath(folderName);
+            string destFullPath = Path.Combine(basePath, destination, folderName);
+
+            try
+            {
+                string? parentDir = Path.GetDirectoryName(destFullPath);
+                if (!string.IsNullOrEmpty(parentDir))
+                {
+                    Directory.CreateDirectory(parentDir);
+                }
+
+                if (Directory.Exists(destFullPath))
+                {
+                    Console.WriteLine($"Warning: Destination already exists, skipping: {destFullPath}");
+                    continue;
+                }
+
+                Directory.Move(itemPath, destFullPath);
+                Console.WriteLine($"Moved: {folderName} -> {destination}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error moving '{folderName}' to '{destination}': {ex.Message}");
+            }
+        }
+    }
+
+    public string GetDestinationPath(string name)
+    {
+        if (name.StartsWith("char") && !name.StartsWith("cutscene_char"))
+            return "char";
+        if (name.StartsWith("cutscene_char"))
+            return "cutscenes";
+        if (name.StartsWith("npc"))
+            return "npc";
+        if (name.StartsWith("illust_dating"))
+            return Path.Combine("illust", "illust_dating");
+        if (name.StartsWith("illust_special") || name.StartsWith("specialillust"))
+            return Path.Combine("illust", "illust_special");
+        if (name.StartsWith("illust_talk"))
+            return Path.Combine("illust", "illust_talk");
+
+        // fallback
+        return "misc";
     }
 }

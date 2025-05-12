@@ -84,6 +84,7 @@ public partial class AssetLogic: LoggedService<AssetLogic>
             RenameSpine();
             SortAsset();
             SortSpine();
+            OrganizeSpine();
             Logger.LogInformation("Done!");
         }
     }
