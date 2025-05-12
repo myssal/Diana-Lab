@@ -13,7 +13,8 @@ public partial class AssetLogic: LoggedService<AssetLogic>
         config = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         updatedFiles = new List<string>();
         GetConfigureData();
-        updatedFiles = Helper.GetFilesBasedOnDate(config["input"], 1, config["date"]);
+        updatedFiles = Helper.GetFilesBasedOnDate(config["input"], int.Parse(config["check_option"]), config["date"],
+            int.Parse(config["fallback_date"]));
         if (updatedFiles.Count == 0)
             Logger.LogInformation($"No files modified found in specific time range, consider changing time date in config.txt.");
     }
