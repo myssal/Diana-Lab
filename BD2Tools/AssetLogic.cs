@@ -23,25 +23,22 @@ public partial class AssetLogic: LoggedService<AssetLogic>
     {
         if (!File.Exists(configPath))
         {
-            Logger.LogError($"Config file not found at {AppDomain.CurrentDomain.BaseDirectory}{configPath}.");
+            Logger.LogError($"Config file not found at {Path.Combine(AppDomain.CurrentDomain.BaseDirectory, configPath)}.");
             return;
         }
+
         Logger.LogInformation($"Reading config file from {configPath}");
+
         try
         {
-            using (StreamReader reader = new StreamReader(configPath))
+            foreach (var line in File.ReadLines(configPath))
             {
-                string line;
-                while ((line = reader.ReadLine()) != null)
+                int separatorIndex = line.IndexOf(": ");
+                if (separatorIndex > 0)
                 {
-                    if (line.Contains(": "))
-                    {
-                        var parts = line.Split(": ");
-                        if (parts.Length == 2)
-                        {
-                            config[parts[0].Trim()] = parts[1].Trim();
-                        }
-                    }
+                    var key = line.Substring(0, separatorIndex).Trim();
+                    var value = line.Substring(separatorIndex + 2).Trim();
+                    config[key] = value;
                 }
             }
         }
@@ -86,6 +83,7 @@ public partial class AssetLogic: LoggedService<AssetLogic>
             SortAsset();
             SortSpine();
             OrganizeSpine();
+            SortAtlas();
             Logger.LogInformation("Done!");
         }
     }

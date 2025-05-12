@@ -1,0 +1,122 @@
+[
+  {
+    "keyword": "Char",
+    "path": "char"
+  },
+  {
+    "keyword": "EventPackGUI",
+    "path": "eventpack"
+  },
+  {
+    "keyword": "LocalPackTitle",
+    "path": "local/pack/title"
+  },
+  {
+    "keyword": "LocalPackIcon",
+    "path": "local/pack/icon"
+  },
+  {
+    "keyword": "LocalAwardIcon",
+    "path": "local/award"
+  },
+  {
+    "keyword": "LocalPassTitle",
+    "path": "local/title/pass"
+  },
+  {
+    "keyword": "LocalEventTitle",
+    "path": "local/title/event"
+  },
+  {
+    "keyword": "LocalMenuBanner",
+    "path": "local/menubanner"
+  },
+  {
+    "keyword": "npc",
+    "path": "npc"
+  },
+  {
+    "keyword": "Guest",
+    "path": "npc"
+  },
+  {
+    "keyword": "Crowd",
+    "path": "npc"
+  },
+  {
+    "keyword": "Someone",
+    "path": "npc"
+  },
+  {
+    "keyword": "LocalPackageTitle",
+    "path": "local/title/package"
+  },
+  {
+    "keyword": "FieldMonster",
+    "path": "monster"
+  },
+  {
+    "keyword": "MonsterParts",
+    "path": "monsterpart"
+  },
+  {
+    "keyword": "BuffIconGUI",
+    "path": "gui/bufficon"
+  },
+  {
+    "keyword": "CurrencyGUI",
+    "path": "gui/currency"
+  },
+  {
+    "keyword": "LocalMiniGame",
+    "path": "local/minigame"
+  },
+  {
+    "keyword": "IconGUI",
+    "path": "gui/icon"
+  },
+  {
+    "keyword": "Cat",
+    "path": "npc"
+  },
+  {
+    "keyword": "Glutti",
+    "path": "npc"
+  },
+  {
+    "keyword": "LocalPackSimpleTitle",
+    "path": "local/title/simplepackage"
+  },
+  {
+    "keyword": "EquipmentIcon",
+    "path": "icon/equipment"
+  },
+  {
+    "keyword": "ResourceIcon",
+    "path": "icon"
+  },
+  {
+    "keyword": "LocalMainTitle",
+    "path": "local/title/main"
+  },
+  {
+    "keyword": "LocalWorldmapName",
+    "path": "local/worldmap"
+  },
+  {
+    "keyword": "GUI",
+    "path": "gui"
+  },
+  {
+    "keyword": "QuestItemIcon",
+    "path": "icon/questitem"
+  },
+  {
+    "keyword": "FoodIcon",
+    "path": "icon/food"
+  },
+  {
+    "keyword": "CostumeIcon",
+    "path": "icon/costume"
+  }
+]
