@@ -2,7 +2,7 @@ using Microsoft.Extensions.Logging;
 
 namespace BD2Tools;
 
-public class AssetLogic: LoggedService<AssetLogic>
+public partial class AssetLogic: LoggedService<AssetLogic>
 {
     Dictionary<string, string> config {get; set;}
     private string configPath = "config.txt";
@@ -52,32 +52,38 @@ public class AssetLogic: LoggedService<AssetLogic>
 
     public void MoveFiles()
     {
-        if (updatedFiles.Count > 0)
+        foreach (var file in updatedFiles)
         {
-            
-            foreach (var file in updatedFiles)
+            string relativePath = Path.GetRelativePath(config["input"],file);
+                
+            string destinationPath = Path.Combine(config["temp"], relativePath);
+                
+            string destinationDir = Path.GetDirectoryName(destinationPath);
+            if (!Directory.Exists(destinationDir))
             {
-                string relativePath = Path.GetRelativePath(config["input"],file);
-                
-                string destinationPath = Path.Combine(config["temp"], relativePath);
-                
-                string destinationDir = Path.GetDirectoryName(destinationPath);
-                if (!Directory.Exists(destinationDir))
-                {
-                    Directory.CreateDirectory(destinationDir);
-                }
-                Logger.LogInformation($"Copying {file} -> {destinationDir}");
-                File.Copy(file, destinationPath, overwrite: true);
+                Directory.CreateDirectory(destinationDir);
             }
+            Logger.LogInformation($"Copying {file} -> {destinationDir}");
+            File.Copy(file, destinationPath, overwrite: true);
         }
     }
     public void ExtractAsset()
     {
+        Logger.LogInformation($"Extracting from {config["temp"]}");
+        string parameter = $"{config["temp"]} {config["output"]} --types Texture2D TextAsset --game Normal --unity_version 2022.3.22f1 --group_assets None";
+        Helper.RunCommand(config["asset-studio"], parameter);
+    }
+
+    public void ProcessAsset()
+    {
         if (updatedFiles.Count > 0)
         {
-            Logger.LogInformation($"Extracting from {config["temp"]}");
-            string parameter = $"{config["temp"]} {config["output"]} --types Texture2D TextAsset --game Normal --unity_version 2022.3.22f1 --group_assets None";
-            Helper.RunCommand(config["asset-studio"], parameter);
+            MoveFiles();
+            ExtractAsset();
+            DeleteRedundant();
+            RenameSpine();
+            SortAsset();
+            SortSpine();
         }
     }
     

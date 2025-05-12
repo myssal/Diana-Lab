@@ -22,7 +22,6 @@ class Program
 
         // Resolve and run the service
         var assetLogic = host.Services.GetRequiredService<AssetLogic>();
-        assetLogic.MoveFiles();
-        assetLogic.ExtractAsset();
+        assetLogic.ProcessAsset();
     }
 }
