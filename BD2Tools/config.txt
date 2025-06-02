@@ -1,0 +1,7 @@
+input: F:\Neowiz\Browndust2\Browndust2_10000001\BrownDust II_Data\Addressable
+temp: F:\FullSetC\Game\Active\BrownDust\data
+output: F:\FullSetC\Game\Active\BrownDust\out
+date: 2025-05-08
+asset-studio: "F:\FullSetC\Tool\Datamine\Unity\AssetStudio\Yarik\AssetStudio.CLI.exe"
+fallback_date: 3
+check_option: 2

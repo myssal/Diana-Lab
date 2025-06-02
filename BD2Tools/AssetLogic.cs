@@ -72,17 +72,22 @@ public partial class AssetLogic: LoggedService<AssetLogic>
         Helper.RunCommand(config["asset-studio"], parameter);
     }
 
+    public void SactxSort(string input)
+    {
+        Logger.LogInformation("Sorting ");
+    }
+    
     public void ProcessAsset()
     {
         if (updatedFiles.Count > 0)
         {
-            MoveFiles();
-            ExtractAsset();
-            DeleteRedundant();
-            RenameSpine();
-            SortAsset();
-            SortSpine();
-            OrganizeSpine();
+            // MoveFiles();
+            // ExtractAsset();
+            // DeleteRedundant();
+            // RenameSpine();
+            // SortAsset();
+            // SortSpine();
+            // OrganizeSpine();
             SortAtlas();
             Logger.LogInformation("Done!");
         }

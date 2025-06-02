@@ -5,15 +5,15 @@ namespace BD2Tools;
 
 public partial class AssetLogic
 {
-    public void SortAtlas(string atlasPath = "")
+    public void SortAtlas(string atlasPath = "atlas.json")
     {
         Logger.LogInformation($"Start sorting atlas.");
-        string basePath = Path.Combine(config["output"], "sort", "atlas");
+        string basePath = Path.Combine(config["output"], "sort", "ui", "atlas");
         //string basePath = atlasPath;
 
         List<string> atlasContents = Directory.GetFiles(basePath, "*.png*", SearchOption.AllDirectories).ToList();
         
-        string jsonContent = File.ReadAllText("atlas.json");
+        string jsonContent = File.ReadAllText(atlasPath);
         var atlasMappings = JsonSerializer.Deserialize<List<PathJson>>(jsonContent);
         
         foreach (var file in atlasContents)
