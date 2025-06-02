@@ -1,10 +1,12 @@
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using Extensions.Data;
 
 namespace BD2Tools;
 
 public class Helper
 {
+    
     public static List<string> GetFilesBasedOnDate(string input, int option = 2, string specificDate = @"2025-05-01",
         int dateBack = 1)
     {
@@ -53,6 +55,13 @@ public class Helper
         process.WaitForExit();
     }
     
+    public static string ComputeXXHash32(string filePath)
+    {
+        using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 4 * 1024 * 1024);
+        XXHash.State32 state = XXHash.CreateState32();  
+        XXHash.UpdateState32(state, stream);  
+        return XXHash.DigestState32(state).ToString(); 
+    }
     public static void SortCutsceneBGs(string ogPath, string assetPath)
     {
         // assuming there's no number before id in path

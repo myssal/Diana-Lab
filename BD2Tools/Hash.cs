@@ -24,7 +24,7 @@ public partial class CDN
                 try
                 {
                     Logger.LogInformation($"Calculating hash for file: {file}");
-                    var hash = ComputeXXHash64(file);
+                    var hash = Helper.ComputeXXHash32(file);
                     var fileHash = new FileHash
                     {
                         Filename = Path.GetFileName(file),
@@ -48,13 +48,10 @@ public partial class CDN
         Logger.LogInformation("Output written to {OutputFile}", output);
     }
 
-    private string ComputeXXHash64(string filePath)
-    {
-        using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 4 * 1024 * 1024);
-        XXHash.State32 state = XXHash.CreateState32();  
-        XXHash.UpdateState32(state, stream);  
-        return XXHash.DigestState32(state).ToString(); 
-    }
+    public bool CheckSimilarity(string input1, string input2) => Helper.ComputeXXHash32(input1) == Helper.ComputeXXHash32
+        (input2);
+    
+    
 }
 
 public class FileHash

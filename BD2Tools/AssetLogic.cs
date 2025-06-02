@@ -6,6 +6,10 @@ public partial class AssetLogic: LoggedService<AssetLogic>
 {
     Dictionary<string, string> config {get; set;}
     private string configPath = "config.txt";
+    
+    public static string deleteTxt = @"data\delete.txt"; 
+    public static string atlasJson = @"data\atlas.json"; 
+    public static string pathJson = @"data\path.json"; 
     private List<string> updatedFiles {get; set;}
     
     public AssetLogic(ILogger<AssetLogic> logger) : base(logger)

@@ -1,11 +1,10 @@
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
-
 namespace BD2Tools;
 
 public partial class AssetLogic
 {
-    public void SortAtlas(string atlasPath = "atlas.json")
+    public void SortAtlas(string atlasPath = "data/atlas.json")
     {
         Logger.LogInformation($"Start sorting atlas.");
         string basePath = Path.Combine(config["output"], "sort", "ui", "atlas");
@@ -72,5 +71,10 @@ public partial class AssetLogic
         }
 
         Logger.LogInformation("Finished flattening atlas directory.");
+    }
+
+    public void CheckDuplicate(string input)
+    {
+        
     }
 }

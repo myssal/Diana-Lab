@@ -7,7 +7,7 @@ public partial class AssetLogic
     public void DeleteRedundant()
     {
         Logger.LogInformation($"Start cleaning redundant assets");
-        List<string> deleteList = File.ReadAllLines("delete.txt").ToList();
+        List<string> deleteList = File.ReadAllLines(deleteTxt).ToList();
         deleteList.Sort();
         int count = 0;
         List<string> file = Directory.GetFiles(config["output"], "*.png*", SearchOption.TopDirectoryOnly).ToList();
@@ -128,7 +128,7 @@ public partial class AssetLogic
         {
             Directory.CreateDirectory(sortPath);
 
-            string jsonContent = File.ReadAllText("path.json");
+            string jsonContent = File.ReadAllText(pathJson);
             var pathMappings = JsonSerializer.Deserialize<List<PathJson>>(jsonContent);
 
             foreach (var mapping in pathMappings)
@@ -240,6 +240,6 @@ public partial class AssetLogic
             return Path.Combine("illust", "illust_talk");
 
         // fallback
-        return "misc";
+        return "misc";  
     }
 }
