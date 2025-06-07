@@ -89,10 +89,10 @@ public partial class AssetLogic: LoggedService<AssetLogic>
             // ExtractAsset();
             // DeleteRedundant();
             // RenameSpine();
-            // SortAsset();
+            SortAsset();
             // SortSpine();
             // OrganizeSpine();
-            SortAtlas();
+            // SortAtlas();
             Logger.LogInformation("Done!");
         }
     }

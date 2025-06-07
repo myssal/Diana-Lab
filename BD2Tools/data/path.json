@@ -232,6 +232,18 @@
 		"path": "ui/spec_illust"
 	},
 	{
+		"keyword": "novel_background",
+		"path": "ui/novel_background"
+	},
+	{
+		"keyword": "specialillust",
+		"path": "ui/spec_illust"
+	},
+	{
+		"keyword": "specialIllust",
+		"path": "ui/spec_illust"
+	},
+	{
 		"keyword": "survival",
 		"path": "ui/survival"
 	}

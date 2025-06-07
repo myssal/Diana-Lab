@@ -123,54 +123,51 @@ public partial class AssetLogic
         Logger.LogInformation($"Start sorting assets.");
         string outputPath = config["output"];
         string sortPath = Path.Combine(outputPath, "sort");
-
         if (!Directory.Exists(sortPath))
-        {
             Directory.CreateDirectory(sortPath);
+        
+        string jsonContent = File.ReadAllText(pathJson);
+        var pathMappings = JsonSerializer.Deserialize<List<PathJson>>(jsonContent);
 
-            string jsonContent = File.ReadAllText(pathJson);
-            var pathMappings = JsonSerializer.Deserialize<List<PathJson>>(jsonContent);
-
-            foreach (var mapping in pathMappings)
+        foreach (var mapping in pathMappings)
+        {
+            string targetDir = Path.Combine(sortPath, mapping.path);
+            if (!Directory.Exists(targetDir))
             {
-                string targetDir = Path.Combine(sortPath, mapping.path);
-                if (!Directory.Exists(targetDir))
-                {
-                    Logger.LogInformation($"Creating directory: {targetDir}");
-                    Directory.CreateDirectory(targetDir);
-                }
+                Logger.LogInformation($"Creating directory: {targetDir}");
+                Directory.CreateDirectory(targetDir);
             }
-
-            var pngFiles = Directory.GetFiles(outputPath, "*.png", SearchOption.TopDirectoryOnly);
-            int totalFiles = pngFiles.Length;
-            int movedFiles = 0;
-
-            foreach (string filePath in pngFiles)
-            {
-                string fileName = Path.GetFileName(filePath);
-
-                // Try to find a matching path using the keyword
-                string targetSubPath = pathMappings
-                    .FirstOrDefault(mapping => filePath.Contains(mapping.keyword))?.path;
-
-                if (!string.IsNullOrEmpty(targetSubPath))
-                {
-                    string targetPath = Path.Combine(sortPath, targetSubPath, fileName);
-                    try
-                    {
-                        Logger.LogInformation($"Moving: {filePath} -> {targetPath}");
-                        File.Move(filePath, targetPath, overwrite: true);
-                        movedFiles++;
-                    }
-                    catch (IOException ex)
-                    {
-                        Logger.LogError($"Failed to move {filePath}: {ex.Message}");
-                    }
-                }
-            }
-
-            Logger.LogInformation($"Moved {movedFiles} files out of {totalFiles}.");
         }
+
+        var pngFiles = Directory.GetFiles(outputPath, "*.png", SearchOption.TopDirectoryOnly);
+        int totalFiles = pngFiles.Length;
+        int movedFiles = 0;
+
+        foreach (string filePath in pngFiles)
+        {
+            string fileName = Path.GetFileName(filePath);
+
+            // Try to find a matching path using the keyword
+            string targetSubPath = pathMappings
+                .FirstOrDefault(mapping => filePath.Contains(mapping.keyword))?.path;
+
+            if (!string.IsNullOrEmpty(targetSubPath))
+            {
+                string targetPath = Path.Combine(sortPath, targetSubPath, fileName);
+                try
+                {
+                    Logger.LogInformation($"Moving: {filePath} -> {targetPath}");
+                    File.Move(filePath, targetPath, overwrite: true);
+                    movedFiles++;
+                }
+                catch (IOException ex)
+                {
+                    Logger.LogError($"Failed to move {filePath}: {ex.Message}");
+                }
+            }
+        }
+
+        Logger.LogInformation($"Moved {movedFiles} files out of {totalFiles}.");
     }
     
     public void OrganizeSpine()
