@@ -9,9 +9,9 @@ public partial class AssetLogic
         Logger.LogInformation($"Start sorting atlas.");
         string basePath = Path.Combine(config["output"], "sort", "ui", "atlas");
         //string basePath = atlasPath;
-
-        List<string> atlasContents = Directory.GetFiles(basePath, "*.png*", SearchOption.AllDirectories).ToList();
         
+        List<string> atlasContents = Directory.GetFiles(basePath, "*.png*", SearchOption.TopDirectoryOnly).ToList();
+        Logger.LogInformation($"Found {atlasContents.Count} atlas files to sort in {basePath}.");;
         string jsonContent = File.ReadAllText(atlasPath);
         var atlasMappings = JsonSerializer.Deserialize<List<PathJson>>(jsonContent);
         

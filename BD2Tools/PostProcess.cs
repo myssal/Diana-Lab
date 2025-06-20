@@ -4,13 +4,14 @@ namespace BD2Tools;
 
 public partial class AssetLogic
 {
-    public void DeleteRedundant()
+    public void DeleteRedundant(string inputPath = "")
     {
+        if (string.IsNullOrEmpty(inputPath)) inputPath = config["output"];
         Logger.LogInformation($"Start cleaning redundant assets");
         List<string> deleteList = File.ReadAllLines(deleteTxt).ToList();
         deleteList.Sort();
         int count = 0;
-        List<string> file = Directory.GetFiles(config["output"], "*.png*", SearchOption.TopDirectoryOnly).ToList();
+        List<string> file = Directory.GetFiles(inputPath, "*.png*", SearchOption.TopDirectoryOnly).ToList();
         foreach (string fileItem in file)
         {
             if (deleteList.Any(x => fileItem.Contains(x)))
@@ -21,7 +22,7 @@ public partial class AssetLogic
                 continue;
             }
         }
-        List<string> audioFile = Directory.GetFiles(config["output"], "*.bytes*", SearchOption.TopDirectoryOnly).ToList();
+        List<string> audioFile = Directory.GetFiles(inputPath, "*.bytes*", SearchOption.TopDirectoryOnly).ToList();
         foreach (string fileItem in audioFile)
         {
             Logger.LogInformation($"Delete {Path.GetFileName(fileItem)}");
@@ -30,11 +31,12 @@ public partial class AssetLogic
         Logger.LogInformation($"Deleted {count} files.");
     }
     
-    public void RenameSpine()
+    public void RenameSpine(string inputPath = "")
     {
+        if (string.IsNullOrEmpty(inputPath)) inputPath = config["output"];
         Logger.LogInformation($"Start renaming spine");
-        List<string> spineFile = Directory.GetFiles(config["output"], "*.asset*", SearchOption.TopDirectoryOnly).ToList();
-        spineFile.AddRange(Directory.GetFiles(config["output"], "*.prefab*", SearchOption.TopDirectoryOnly).ToList());
+        List<string> spineFile = Directory.GetFiles(inputPath, "*.asset*", SearchOption.TopDirectoryOnly).ToList();
+        spineFile.AddRange(Directory.GetFiles(inputPath, "*.prefab*", SearchOption.TopDirectoryOnly).ToList());
         foreach (string fileItem in spineFile)
         {
             Logger.LogInformation($"Rename spine file: {Path.GetFileName(fileItem)}");

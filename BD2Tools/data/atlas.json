@@ -116,6 +116,14 @@
     "path": "icon/food"
   },
   {
+    "keyword": "CollectionIcon",
+    "path": "icon/icon_collection"
+  },
+  {
+    "keyword": "CinemaObject",
+    "path": "icon/object_cinema"
+  },
+  {
     "keyword": "CostumeIcon",
     "path": "icon/costume"
   }

@@ -85,14 +85,14 @@ public partial class AssetLogic: LoggedService<AssetLogic>
     {
         if (updatedFiles.Count > 0)
         {
-            // MoveFiles();
-            // ExtractAsset();
-            // DeleteRedundant();
-            // RenameSpine();
+            MoveFiles();
+            ExtractAsset();
+            DeleteRedundant();
+            RenameSpine();
             SortAsset();
-            // SortSpine();
-            // OrganizeSpine();
-            // SortAtlas();
+            SortSpine();
+            OrganizeSpine();
+            SortAtlas();
             Logger.LogInformation("Done!");
         }
     }
