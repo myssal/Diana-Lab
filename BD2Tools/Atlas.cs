@@ -73,8 +73,61 @@ public partial class AssetLogic
         Logger.LogInformation("Finished flattening atlas directory.");
     }
 
-    public void CheckDuplicate(string input)
+    public void CheckDuplicate(string inputPath)
     {
+        List<string> lowestLevelFolders = Helper.GetLowestLevelSubfolders(inputPath);
+        Logger.LogInformation($"Found {lowestLevelFolders.Count} lowest level.");
+        foreach (var subfolder in lowestLevelFolders)
+        {
+            Logger.LogInformation($"Scanning duplicate in {subfolder}");
+            foreach (var file in FindDuplicateImages(subfolder))
+            {
+                Logger.LogInformation($"Delete duplicate image: {Path.GetFileName(file)}");
+                File.Delete(file);
+            }
+        }
+    }
+    public List<string> FindDuplicateImages(string folderPath)
+    {
+        var pngFiles = Directory.GetFiles(folderPath, "*.png", SearchOption.TopDirectoryOnly);
+
+        var fileInfos = pngFiles.Select(file => new
+        {
+            FilePath = file,
+            Name = GetBaseName(Path.GetFileNameWithoutExtension(file)),
+            Hash = Helper.ComputeXXHash32(file),
+            Modified = File.GetLastWriteTimeUtc(file)
+        }).ToList();
+
+        var duplicatesToReport = new List<string>();
         
+        var groupedByName = fileInfos.GroupBy(f => f.Name);
+
+        foreach (var group in groupedByName)
+        {
+            var hashGroups = group.GroupBy(f => f.Hash);
+
+            foreach (var hashGroup in hashGroups)
+            {
+                if (hashGroup.Count() > 1)
+                {
+                    var sorted = hashGroup.OrderByDescending(f => f.Modified).ToList();
+                    duplicatesToReport.AddRange(sorted.Skip(1).Select(f => f.FilePath));
+                }
+            }
+        }
+
+        return duplicatesToReport;
+    }
+
+    public string GetBaseName(string filename)
+    {
+        int lastDash = filename.LastIndexOf('-');
+        return lastDash > 0 ? filename.Substring(0, lastDash) : filename;
+    }
+
+    public string HashCalculate(string filePath)
+    {
+        return "";
     }
 }

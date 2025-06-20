@@ -84,4 +84,16 @@ public class Helper
             }
         }
     }
+    
+    public static List<string> GetLowestLevelSubfolders(string rootFolder)
+    {
+        var allDirs = Directory.GetDirectories(rootFolder, "*", SearchOption.AllDirectories);
+
+        // Filter out any directory that has at least one subdirectory
+        var lowestLevelDirs = allDirs
+            .Where(dir => Directory.GetDirectories(dir).Length == 0)
+            .ToList();
+
+        return lowestLevelDirs;
+    }
 }

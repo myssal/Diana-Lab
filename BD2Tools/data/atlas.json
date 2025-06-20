@@ -56,6 +56,14 @@
     "path": "monster"
   },
   {
+    "keyword": "DirtyRat",
+    "path": "monster"
+  },
+  {
+    "keyword": "GhostTrain",
+    "path": "monster"
+  },
+  {
     "keyword": "MonsterParts",
     "path": "monsterpart"
   },
@@ -122,6 +130,34 @@
   {
     "keyword": "CinemaObject",
     "path": "icon/object_cinema"
+  },
+  {
+    "keyword": "Extra",
+    "path": "extra"
+  },
+  {
+    "keyword": "Timeline",
+    "path": "timeline"
+  },
+  {
+    "keyword": "UseItemIcon",
+    "path": "icon"
+  },
+  {
+    "keyword": "Captcha",
+    "path": "captcha"
+  },
+  {
+    "keyword": "BattleObject",
+    "path": "misc"
+  },
+  {
+    "keyword": "Box",
+    "path": "misc"
+  },
+  {
+    "keyword": "MainTitle",
+    "path": "gui"
   },
   {
     "keyword": "CostumeIcon",
