@@ -58,7 +58,7 @@
 	{
 		"keyword": "icon_collection",
 		"path": "ui/icon/icon_collection"
-	},	
+	},
 	{
 		"keyword": "icon_costume",
 		"path": "ui/icon/icon_costume"
@@ -242,6 +242,14 @@
 	{
 		"keyword": "specialIllust",
 		"path": "ui/spec_illust"
+	},
+	{
+		"keyword": "rhythm_bubble_face",
+		"path": "ui/rhythm/bubble_face"
+	},
+	{
+		"keyword": "rhythm_cover",
+		"path": "ui/rhythm/cover"
 	},
 	{
 		"keyword": "survival",
