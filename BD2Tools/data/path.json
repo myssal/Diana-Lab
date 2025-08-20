@@ -12,6 +12,22 @@
 		"path": "ui/bosspart"
 	},
 	{
+		"keyword": "rhythm_bubble_face",
+		"path": "ui/rhythm/bubble_face"
+	},
+	{
+		"keyword": "rhythm_cover",
+		"path": "ui/rhythm/cover"
+	},
+	{
+		"keyword": "icon_rhythmcard",
+		"path": "ui/rhythm/icon_card"
+	},
+	{
+		"keyword": "rhythm_bg",
+		"path": "ui/rhythm/bg"
+	},
+	{
 		"keyword": "updateintrodue",
 		"path": "ui/updateIntro"
 	},
@@ -242,14 +258,6 @@
 	{
 		"keyword": "specialIllust",
 		"path": "ui/spec_illust"
-	},
-	{
-		"keyword": "rhythm_bubble_face",
-		"path": "ui/rhythm/bubble_face"
-	},
-	{
-		"keyword": "rhythm_cover",
-		"path": "ui/rhythm/cover"
 	},
 	{
 		"keyword": "survival",
