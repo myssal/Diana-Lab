@@ -22,7 +22,7 @@ public class CostumeInfo
 public class SpecialGuestInfo
 {
     public string releaseDate { get; set; }
-    public string spine { get; set; }
+    public string interact { get; set; }
 }
 
 public class PrestigeSkinInfo
@@ -30,4 +30,5 @@ public class PrestigeSkinInfo
     public string prestigeSkinName { get; set; }
     public string releaseDate { get; set; }
     public string spine { get; set; }
+    public string interact { get; set; }
 }

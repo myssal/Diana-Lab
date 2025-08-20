@@ -96,4 +96,26 @@ public class Helper
 
         return lowestLevelDirs;
     }
+    
+    public static void CopyAllFiles(string sourceDir, string destinationDir)
+    {
+        if (!Directory.Exists(sourceDir))
+        {
+            throw new DirectoryNotFoundException($"Source directory not found: {sourceDir}");
+        }
+        
+        foreach (string filePath in Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories))
+        {
+            string relativePath = Path.GetRelativePath(sourceDir, filePath);
+
+            string destPath = Path.Combine(destinationDir, relativePath);
+            
+            string destDir = Path.GetDirectoryName(destPath);
+            if (!Directory.Exists(destDir))
+            {
+                Directory.CreateDirectory(destDir);
+            }
+            File.Copy(filePath, destPath, overwrite: true);
+        }
+    }
 }

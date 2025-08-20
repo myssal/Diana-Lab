@@ -67,39 +67,49 @@ namespace BD2Tools.Core
                 return;
             }
 
-            Console.WriteLine("\nSelect an option:");
-            Console.WriteLine("1 - Add new character");
-            Console.WriteLine("2 - Add new costume");
-            Console.WriteLine("3 - Add special guest");
-            Console.WriteLine("4 - Add prestige skin");
-            Console.Write("Choice: ");
-            string choice = Console.ReadLine()?.Trim() ?? "";
-
-            bool overwrite = Prompt("Overwrite existing file? (y/n)", "n").ToLower() == "y";
-
             var characters = LoadJson(filePath);
 
-            switch (choice)
+            while (true) 
             {
-                case "1":
-                    AddNewCharacter(characters);
-                    break;
-                case "2":
-                    AddNewCostume(characters);
-                    break;
-                case "3":
-                    AddSpecialGuest(characters);
-                    break;
-                case "4":
-                    AddPrestigeSkin(characters);
-                    break;
-                default:
-                    Console.WriteLine("Invalid choice.");
-                    return;
-            }
+                Console.WriteLine("\nSelect an option:");
+                Console.WriteLine("0 - Exit");
+                Console.WriteLine("1 - Add new character");
+                Console.WriteLine("2 - Add new costume");
+                Console.WriteLine("3 - Add special guest");
+                Console.WriteLine("4 - Add prestige skin");
+                Console.Write("Choice: ");
+                string choice = Console.ReadLine()?.Trim() ?? "";
 
-            SaveJson(GetOutputPath(filePath, overwrite), characters);
-            Console.WriteLine("Changes saved successfully.");
+                if (choice == "0")
+                {
+                    Console.WriteLine("Exiting...");
+                    break;
+                }
+
+                bool overwrite = Prompt("Overwrite existing file? (y/n)", "n").ToLower() == "y";
+
+                switch (choice)
+                {
+                    case "1":
+                        AddNewCharacter(characters);
+                        break;
+                    case "2":
+                        AddNewCostume(characters);
+                        break;
+                    case "3":
+                        AddSpecialGuest(characters);
+                        break;
+                    case "4":
+                        AddPrestigeSkin(characters);
+                        break;
+                    default:
+                        Console.WriteLine("Invalid choice.");
+                        continue;
+                }
+
+                SaveJson(GetOutputPath(filePath, overwrite), characters);
+                Console.WriteLine("Changes saved successfully.");
+            }
         }
 
         private static void AddNewCharacter(List<CharacterInfo> characters)
@@ -144,12 +154,14 @@ namespace BD2Tools.Core
                 };
                 characters.Add(character);
             }
-
+            
+            string tempPrompt = Prompt("Enter Release Date (YYYY-MM-DD or 0 if UNRELEASED)"); 
+            
             var costume = new CostumeInfo
             {
                 costumeId = Prompt("Enter Costume ID"),
                 costumeName = Prompt("Enter Costume Name"),
-                releaseDate = Prompt("Enter Release Date (YYYY-MM-DD or UNRELEASED)"),
+                releaseDate = tempPrompt == "0" ? "UNRELEASED" : tempPrompt,
                 spine = Prompt("Enter Spine"),
                 cutscene = Prompt("Enter Cutscene")
             };
@@ -185,11 +197,13 @@ namespace BD2Tools.Core
                 };
                 characters.Add(character);
             }
-
+            
+            string tempPrompt = Prompt("Enter Guest Release Date (YYYY-MM-DD or 0 if UNRELEASED)"); 
+            
             character.guest = new SpecialGuestInfo
             {
-                releaseDate = Prompt("Enter Guest Release Date (YYYY-MM-DD or UNRELEASED)"),
-                spine = Prompt("Enter Guest Spine")
+                releaseDate = tempPrompt == "0" ? "UNRELEASED" : tempPrompt,
+                interact = Prompt("Enter Guest Interact")
             };
 
             Console.WriteLine("Special guest added/updated.");
@@ -215,11 +229,14 @@ namespace BD2Tools.Core
                 characters.Add(character);
             }
 
+            string tempPrompt = Prompt("Enter Prestige Skin Release Date (YYYY-MM-DD or 0 if UNRELEASED)");
+            
             character.prestigeSkin = new PrestigeSkinInfo
             {
                 prestigeSkinName = Prompt("Enter Prestige Skin Name"),
-                releaseDate = Prompt("Enter Prestige Skin Release Date (YYYY-MM-DD or UNRELEASED)"),
-                spine = Prompt("Enter Prestige Skin Spine")
+                releaseDate = tempPrompt == "0" ? "UNRELEASED" : tempPrompt,
+                spine = Prompt("Enter Prestige Skin Spine"),
+                interact = Prompt("Enter Prestige Skin Interact")
             };
 
             Console.WriteLine("Prestige skin added/updated.");
