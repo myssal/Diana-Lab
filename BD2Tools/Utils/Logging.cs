@@ -1,10 +1,13 @@
+
 using Microsoft.Extensions.Logging;
+
+namespace BD2Tools.Utils;
 
 public abstract class LoggedService<T>
 {
     protected ILogger<T> Logger { get; }
 
-    public LoggedService(ILogger<T> logger)
+    protected LoggedService(ILogger<T> logger)
     {
         Logger = logger;
     }

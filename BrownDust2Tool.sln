@@ -5,6 +5,8 @@ VisualStudioVersion = 17.10.35027.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BD2Tools", "BD2Tools\BD2Tools.csproj", "{4F451D5D-DB76-40F6-B722-D5F15DE5A645}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BD2GUI", "BD2GUI\BD2GUI.csproj", "{3EAC8DE9-79D1-4990-9429-4D89B8E73F0E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{4F451D5D-DB76-40F6-B722-D5F15DE5A645}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F451D5D-DB76-40F6-B722-D5F15DE5A645}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4F451D5D-DB76-40F6-B722-D5F15DE5A645}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EAC8DE9-79D1-4990-9429-4D89B8E73F0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EAC8DE9-79D1-4990-9429-4D89B8E73F0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EAC8DE9-79D1-4990-9429-4D89B8E73F0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EAC8DE9-79D1-4990-9429-4D89B8E73F0E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

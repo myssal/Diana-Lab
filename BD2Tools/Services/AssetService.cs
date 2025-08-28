@@ -1,13 +1,106 @@
+
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
-namespace BD2Tools;
+using BD2Tools.Model;
+using BD2Tools.Utils;
 
-public partial class AssetLogic
+namespace BD2Tools.Services;
+
+public class AssetService : LoggedService<AssetService>
 {
+    private readonly Dictionary<string, string> config;
+    private const string ConfigPath = "config.txt";
+    public static string deleteTxt = @"data\delete.txt";
+    public static string atlasJson = @"data\atlas.json";
+    public static string pathJson = @"data\path.json";
+    private readonly List<string> updatedFiles;
+
+    public AssetService(ILogger<AssetService> logger) : base(logger)
+    {
+        config = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        updatedFiles = new List<string>();
+        GetConfigureData();
+        if (config.Count > 0)
+        {
+            updatedFiles = Helper.GetFilesBasedOnDate(config["input"], int.Parse(config["check_option"]), config["date"],
+                int.Parse(config["fallback_date"]));
+            if (updatedFiles.Count == 0)
+                Logger.LogInformation("No files modified found in specific time range, consider changing time date in config.txt.");
+        }
+    }
+
+    public void GetConfigureData()
+    {
+        if (!File.Exists(ConfigPath))
+        {
+            Logger.LogError($"Config file not found at {Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ConfigPath)}.");
+            return;
+        }
+
+        Logger.LogInformation($"Reading config file from {ConfigPath}");
+
+        try
+        {
+            foreach (var line in File.ReadLines(ConfigPath))
+            {
+                int separatorIndex = line.IndexOf(": ");
+                if (separatorIndex > 0)
+                {
+                    var key = line.Substring(0, separatorIndex).Trim();
+                    var value = line.Substring(separatorIndex + 2).Trim();
+                    config[key] = value;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError($"Error reading config file: {ex.Message}");
+        }
+    }
+
+    public void MoveFiles()
+    {
+        foreach (var file in updatedFiles)
+        {
+            string relativePath = Path.GetRelativePath(config["input"], file);
+            string destinationPath = Path.Combine(config["temp"], relativePath);
+            string? destinationDir = Path.GetDirectoryName(destinationPath);
+            if (!Directory.Exists(destinationDir))
+            {
+                Directory.CreateDirectory(destinationDir!);
+            }
+            Logger.LogInformation($"Copying {file} -> {destinationDir}");
+            File.Copy(file, destinationPath, overwrite: true);
+        }
+    }
+
+    public void ExtractAsset()
+    {
+        Logger.LogInformation($"Extracting from {config["temp"]}");
+        string parameter = $"{config["temp"]} {config["output"]} --types Texture2D TextAsset --game Normal --unity_version 2022.3.22f1 --group_assets None";
+        Helper.RunCommand(config["asset-studio"], parameter);
+    }
+
+    public void ProcessAsset()
+    {
+        if (updatedFiles.Count > 0)
+        {
+            //MoveFiles();
+            //ExtractAsset();
+            //DeleteRedundant();
+            //RenameSpine();
+            SortAsset();
+            SortSpine();
+            OrganizeSpine();
+            SortAtlas();
+            Logger.LogInformation("Done!");
+        }
+    }
+
     public void DeleteRedundant(string inputPath = "")
     {
         if (string.IsNullOrEmpty(inputPath)) inputPath = config["output"];
-        Logger.LogInformation($"Start cleaning redundant assets");
+        Logger.LogInformation("Start cleaning redundant assets");
         List<string> deleteList = File.ReadAllLines(deleteTxt).ToList();
         deleteList.Sort();
         int count = 0;
@@ -19,7 +112,6 @@ public partial class AssetLogic
                 Logger.LogInformation($"Delete {Path.GetFileName(fileItem)}");
                 File.Delete(fileItem);
                 count++;
-                continue;
             }
         }
         List<string> audioFile = Directory.GetFiles(inputPath, "*.bytes*", SearchOption.TopDirectoryOnly).ToList();
@@ -30,11 +122,11 @@ public partial class AssetLogic
         }
         Logger.LogInformation($"Deleted {count} files.");
     }
-    
+
     public void RenameSpine(string inputPath = "")
     {
         if (string.IsNullOrEmpty(inputPath)) inputPath = config["output"];
-        Logger.LogInformation($"Start renaming spine");
+        Logger.LogInformation("Start renaming spine");
         List<string> spineFile = Directory.GetFiles(inputPath, "*.asset*", SearchOption.TopDirectoryOnly).ToList();
         spineFile.AddRange(Directory.GetFiles(inputPath, "*.prefab*", SearchOption.TopDirectoryOnly).ToList());
         foreach (string fileItem in spineFile)
@@ -43,26 +135,25 @@ public partial class AssetLogic
             File.Move(fileItem, fileItem.Replace(".asset", string.Empty), true);
         }
     }
-    
+
     public void SortSpine()
     {
         Logger.LogInformation("Start sorting spine.");
         string outputPath = config["output"];
         string spineDir = Path.Combine(outputPath, "spine");
-        
+
         if (!Directory.Exists(spineDir))
         {
             Directory.CreateDirectory(spineDir);
         }
 
-        // Get all .atlas files
         var atlasFiles = Directory.GetFiles(outputPath, "*.atlas*", SearchOption.TopDirectoryOnly);
 
         foreach (string atlasPath in atlasFiles)
         {
             string[] atlasContent = File.ReadAllLines(atlasPath);
             var textureFiles = atlasContent.Where(line => line.Contains(".png")).ToList();
-            var textureBg = Directory.GetFiles(outputPath, $"*{Path.GetFileNameWithoutExtension(atlasPath)}_back*", 
+            var textureBg = Directory.GetFiles(outputPath, $"*{Path.GetFileNameWithoutExtension(atlasPath)}_back*",
                 SearchOption.TopDirectoryOnly).ToList();
             textureFiles.AddRange(textureBg);
             Logger.LogInformation($"Found {textureFiles.Count} textures in {Path.GetFileName(atlasPath)}.");
@@ -74,12 +165,10 @@ public partial class AssetLogic
 
             try
             {
-                // Move .atlas file
                 string targetAtlasPath = Path.Combine(targetSubDir, $"{baseFileName}.atlas");
                 Logger.LogInformation($"Moving atlas: {atlasPath} -> {targetAtlasPath}");
                 File.Move(atlasPath, targetAtlasPath, overwrite: true);
 
-                // Move .skel file
                 string skelPath = Path.Combine(outputPath, $"{baseFileName}.skel");
                 string targetSkelPath = Path.Combine(targetSubDir, $"{baseFileName}.skel");
                 Logger.LogInformation($"Moving skeleton: {skelPath} -> {targetSkelPath}");
@@ -88,7 +177,7 @@ public partial class AssetLogic
             catch (FileNotFoundException ex)
             {
                 Logger.LogWarning($"Missing core file: {ex.FileName}");
-                continue; 
+                continue;
             }
             catch (Exception ex)
             {
@@ -96,7 +185,6 @@ public partial class AssetLogic
                 continue;
             }
 
-            // Move texture files (resilient per texture)
             foreach (string textureName in textureFiles)
             {
                 try
@@ -109,12 +197,10 @@ public partial class AssetLogic
                 catch (FileNotFoundException)
                 {
                     Logger.LogWarning($"Texture file not found: {textureName}");
-                    continue;
                 }
                 catch (Exception ex)
                 {
                     Logger.LogWarning($"Error moving texture {textureName}: {ex.Message}");
-                    continue;
                 }
             }
         }
@@ -122,16 +208,16 @@ public partial class AssetLogic
 
     public void SortAsset()
     {
-        Logger.LogInformation($"Start sorting assets.");
+        Logger.LogInformation("Start sorting assets.");
         string outputPath = config["output"];
         string sortPath = Path.Combine(outputPath, "sort");
         if (!Directory.Exists(sortPath))
             Directory.CreateDirectory(sortPath);
-        
+
         string jsonContent = File.ReadAllText(pathJson);
         var pathMappings = JsonSerializer.Deserialize<List<PathJson>>(jsonContent);
 
-        foreach (var mapping in pathMappings)
+        foreach (var mapping in pathMappings!)
         {
             string targetDir = Path.Combine(sortPath, mapping.path);
             if (!Directory.Exists(targetDir))
@@ -148,9 +234,7 @@ public partial class AssetLogic
         foreach (string filePath in pngFiles)
         {
             string fileName = Path.GetFileName(filePath);
-
-            // Try to find a matching path using the keyword
-            string targetSubPath = pathMappings
+            string? targetSubPath = pathMappings
                 .FirstOrDefault(mapping => filePath.Contains(mapping.keyword))?.path;
 
             if (!string.IsNullOrEmpty(targetSubPath))
@@ -171,7 +255,7 @@ public partial class AssetLogic
 
         Logger.LogInformation($"Moved {movedFiles} files out of {totalFiles}.");
     }
-    
+
     public void OrganizeSpine()
     {
         string basePath = Path.Combine(config["output"], "spine");
@@ -238,7 +322,127 @@ public partial class AssetLogic
         if (name.StartsWith("illust_talk"))
             return Path.Combine("illust", "illust_talk");
 
-        // fallback
-        return "misc";  
+        return "misc";
+    }
+
+    public void SortAtlas(string atlasPath = "data/atlas.json")
+    {
+        Logger.LogInformation("Start sorting atlas.");
+        string basePath = Path.Combine(config["output"], "sort", "ui", "atlas");
+
+        List<string> atlasContents = Directory.GetFiles(basePath, "*.png*", SearchOption.TopDirectoryOnly).ToList();
+        Logger.LogInformation($"Found {atlasContents.Count} atlas files to sort in {basePath}."); ;
+        string jsonContent = File.ReadAllText(atlasPath);
+        var atlasMappings = JsonSerializer.Deserialize<List<PathJson>>(jsonContent);
+
+        foreach (var file in atlasContents)
+        {
+            string fileName = Path.GetFileName(file);
+
+            foreach (var mapping in atlasMappings!)
+            {
+                if (fileName.Contains(mapping.keyword, StringComparison.OrdinalIgnoreCase))
+                {
+                    string targetDir = Path.Combine(basePath, mapping.path);
+                    if (!Directory.Exists(targetDir))
+                    {
+                        Directory.CreateDirectory(targetDir);
+                    }
+
+                    string targetPath = Path.Combine(targetDir, fileName);
+
+                    File.Move(file, targetPath, true);
+                    Logger.LogInformation($"Moved '{fileName}' to '{targetDir}'");
+                    break;
+                }
+            }
+        }
+
+        Logger.LogInformation("Finished sorting atlas.");
+    }
+
+    public void FlattenAtlasDirectory(string atlasPath)
+    {
+        Logger.LogInformation($"Flattening atlas directory: {atlasPath}");
+
+        var allFiles = Directory.GetFiles(atlasPath, "*.*", SearchOption.AllDirectories);
+
+        foreach (var file in allFiles)
+        {
+            string relativePath = Path.GetRelativePath(atlasPath, file);
+            string fileName = Path.GetFileName(file);
+            string destinationPath = Path.Combine(atlasPath, fileName);
+
+            if (Path.GetDirectoryName(file) == atlasPath)
+                continue;
+
+            File.Move(file, destinationPath, true);
+            Logger.LogInformation($"Moved '{relativePath}' to root.");
+        }
+
+        var subDirs = Directory.GetDirectories(atlasPath, "*", SearchOption.AllDirectories);
+        foreach (var dir in subDirs.OrderByDescending(d => d.Length))
+        {
+            if (Directory.GetFiles(dir).Length == 0 && Directory.GetDirectories(dir).Length == 0)
+            {
+                Directory.Delete(dir, recursive: false);
+                Logger.LogInformation($"Deleted empty folder: {dir}");
+            }
+        }
+
+        Logger.LogInformation("Finished flattening atlas directory.");
+    }
+
+    public void CheckDuplicate(string inputPath)
+    {
+        List<string> lowestLevelFolders = Helper.GetLowestLevelSubfolders(inputPath);
+        Logger.LogInformation($"Found {lowestLevelFolders.Count} lowest level.");
+        foreach (var subfolder in lowestLevelFolders)
+        {
+            Logger.LogInformation($"Scanning duplicate in {subfolder}");
+            foreach (var file in FindDuplicateImages(subfolder))
+            {
+                Logger.LogInformation($"Delete duplicate image: {Path.GetFileName(file)}");
+                File.Delete(file);
+            }
+        }
+    }
+    public List<string> FindDuplicateImages(string folderPath)
+    {
+        var pngFiles = Directory.GetFiles(folderPath, "*.png", SearchOption.TopDirectoryOnly);
+
+        var fileInfos = pngFiles.Select(file => new
+        {
+            FilePath = file,
+            Name = GetBaseName(Path.GetFileNameWithoutExtension(file)),
+            Hash = Helper.ComputeXXHash32(file),
+            Modified = File.GetLastWriteTimeUtc(file)
+        }).ToList();
+
+        var duplicatesToReport = new List<string>();
+
+        var groupedByName = fileInfos.GroupBy(f => f.Name);
+
+        foreach (var group in groupedByName)
+        {
+            var hashGroups = group.GroupBy(f => f.Hash);
+
+            foreach (var hashGroup in hashGroups)
+            {
+                if (hashGroup.Count() > 1)
+                {
+                    var sorted = hashGroup.OrderByDescending(f => f.Modified).ToList();
+                    duplicatesToReport.AddRange(sorted.Skip(1).Select(f => f.FilePath));
+                }
+            }
+        }
+
+        return duplicatesToReport;
+    }
+
+    public string GetBaseName(string filename)
+    {
+        int lastDash = filename.LastIndexOf('-');
+        return lastDash > 0 ? filename.Substring(0, lastDash) : filename;
     }
 }

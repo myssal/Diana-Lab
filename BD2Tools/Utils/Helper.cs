@@ -1,12 +1,12 @@
+
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using Extensions.Data;
 
-namespace BD2Tools;
+namespace BD2Tools.Utils;
 
 public class Helper
 {
-    
     public static List<string> GetFilesBasedOnDate(string input, int option = 2, string specificDate = @"2025-05-01",
         int dateBack = 1)
     {
@@ -42,10 +42,9 @@ public class Helper
 
         return result;
     }
-    
+
     public static void RunCommand(string exePath, string arguments)
     {
-
         ProcessStartInfo info = new ProcessStartInfo(exePath);
         info.Arguments = arguments;
         info.UseShellExecute = false;
@@ -54,17 +53,17 @@ public class Helper
         process.Start();
         process.WaitForExit();
     }
-    
+
     public static string ComputeXXHash32(string filePath)
     {
         using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, 4 * 1024 * 1024);
-        XXHash.State32 state = XXHash.CreateState32();  
-        XXHash.UpdateState32(state, stream);  
-        return XXHash.DigestState32(state).ToString(); 
+        XXHash.State32 state = XXHash.CreateState32();
+        XXHash.UpdateState32(state, stream);
+        return XXHash.DigestState32(state).ToString();
     }
+
     public static void SortCutsceneBGs(string ogPath, string assetPath)
     {
-        // assuming there's no number before id in path
         var idList = Directory.GetDirectories(ogPath, "*cutscene_char*");
         int[] id = idList.Select(x => int.Parse(Regex.Match(Path.GetFileNameWithoutExtension(x), @"\d+").Value)).ToArray();
         Regex bgCheck = new Regex(@"^((cha)r?)?[0-9]{5,6}");
@@ -79,37 +78,33 @@ public class Helper
             string expectedSubfolder = $"cutscene_char{int.Parse(Regex.Match(Path.GetFileNameWithoutExtension(bg), @"\d+").Value).ToString("D6")}";
             if (Directory.Exists(Path.Combine(ogPath, expectedSubfolder)))
             {
-                Console.WriteLine($"Move {bg} -> {Path.Combine(ogPath, expectedSubfolder)}");   
+                Console.WriteLine($"Move {bg} -> {Path.Combine(ogPath, expectedSubfolder)}");
                 File.Copy(bg, Path.Combine(ogPath, expectedSubfolder, Path.GetFileName(bg)), true);
             }
         }
     }
-    
+
     public static List<string> GetLowestLevelSubfolders(string rootFolder)
     {
         var allDirs = Directory.GetDirectories(rootFolder, "*", SearchOption.AllDirectories);
-
-        // Filter out any directory that has at least one subdirectory
         var lowestLevelDirs = allDirs
             .Where(dir => Directory.GetDirectories(dir).Length == 0)
             .ToList();
 
         return lowestLevelDirs;
     }
-    
+
     public static void CopyAllFiles(string sourceDir, string destinationDir)
     {
         if (!Directory.Exists(sourceDir))
         {
             throw new DirectoryNotFoundException($"Source directory not found: {sourceDir}");
         }
-        
+
         foreach (string filePath in Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories))
         {
             string relativePath = Path.GetRelativePath(sourceDir, filePath);
-
             string destPath = Path.Combine(destinationDir, relativePath);
-            
             string destDir = Path.GetDirectoryName(destPath);
             if (!Directory.Exists(destDir))
             {
