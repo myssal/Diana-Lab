@@ -32,6 +32,38 @@
 		"path": "ui/updateIntro"
 	},
 	{
+		"keyword": "bg_idcard_bg_background",
+		"path": "ui/idcard/background"
+	},
+	{
+		"keyword": "bg_idcard_bg_cutscene",
+		"path": "ui/idcard/cutscene"
+	},
+	{
+		"keyword": "bg_idcard_bg_eff",
+		"path": "ui/idcard/eff"
+	},
+	{
+		"keyword": "bg_idcard_bg_packevent",
+		"path": "ui/idcard/packevent"
+	},
+	{
+		"keyword": "bg_idcard_bg_packtitle",
+		"path": "ui/idcard/packtitle"
+	},
+	{
+		"keyword": "bg_idcard_bg_specialillust",
+		"path": "ui/idcard/specialillust"
+	},
+	{
+		"keyword": "bg_idcard_sticker_costume",
+		"path": "ui/idcard/costume"
+	},
+	{
+		"keyword": "bg_idcard_",
+		"path": "ui/idcard/misc"
+	},
+	{
 		"keyword": "bg_attendance",
 		"path": "ui/bg/bg_attendance"
 	},

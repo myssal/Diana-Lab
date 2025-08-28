@@ -27,6 +27,7 @@ class Program
             })
             .Build();
 
-        CharacterService.RunAddCLI();
+        var assetService = host.Services.GetRequiredService<AssetService>();
+        assetService.ResizeSpineImages();
     }
 }

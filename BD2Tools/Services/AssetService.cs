@@ -1,8 +1,8 @@
-
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using BD2Tools.Model;
 using BD2Tools.Utils;
+using System.Drawing;
 
 namespace BD2Tools.Services;
 
@@ -10,9 +10,9 @@ public class AssetService : LoggedService<AssetService>
 {
     private readonly Dictionary<string, string> config;
     private const string ConfigPath = "config.txt";
-    public static string deleteTxt = @"data\delete.txt";
-    public static string atlasJson = @"data\atlas.json";
-    public static string pathJson = @"data\path.json";
+    public static string deleteTxt = @"Data\delete.txt";
+    public static string atlasJson = @"Data\atlas.json";
+    public static string pathJson = @"Data\path.json";
     private readonly List<string> updatedFiles;
 
     public AssetService(ILogger<AssetService> logger) : base(logger)
@@ -85,10 +85,10 @@ public class AssetService : LoggedService<AssetService>
     {
         if (updatedFiles.Count > 0)
         {
-            //MoveFiles();
-            //ExtractAsset();
-            //DeleteRedundant();
-            //RenameSpine();
+            MoveFiles();
+            ExtractAsset();
+            DeleteRedundant();
+            RenameSpine();
             SortAsset();
             SortSpine();
             OrganizeSpine();
@@ -444,5 +444,81 @@ public class AssetService : LoggedService<AssetService>
     {
         int lastDash = filename.LastIndexOf('-');
         return lastDash > 0 ? filename.Substring(0, lastDash) : filename;
+    }
+
+    public void ResizeSpineImages()
+    {
+        string basePath = Path.Combine(config["output"], "spine");
+        if (!Directory.Exists(basePath))
+        {
+            Logger.LogWarning($"Spine directory not found: {basePath}");
+            return;
+        }
+
+        var atlasFiles = Directory.GetFiles(basePath, "*.atlas", SearchOption.AllDirectories);
+        int resizedFilesCount = 0;
+        var resizedFiles = new List<string>();
+
+        foreach (var atlasFile in atlasFiles)
+        {
+            Logger.LogInformation($"Processing atlas: {atlasFile}");
+            var imageDimensions = new Dictionary<string, Size>();
+            string[] lines = File.ReadAllLines(atlasFile);
+            for (int i = 0; i < lines.Length; i++)
+            {
+                if (lines[i].Contains(".png"))
+                {
+                    string imageName = lines[i].Trim();
+                    if (i + 1 < lines.Length)
+                    {
+                        string sizeLine = lines[i + 1];
+                        var match = System.Text.RegularExpressions.Regex.Match(sizeLine, @"size:\s*(\d+),(\d+)");
+                        if (match.Success)
+                        {
+                            int width = int.Parse(match.Groups[1].Value);
+                            int height = int.Parse(match.Groups[2].Value);
+                            imageDimensions[imageName] = new Size(width, height);
+                        }
+                    }
+                }
+            }
+
+            string directory = Path.GetDirectoryName(atlasFile)!;
+            foreach (var entry in imageDimensions)
+            {
+                string imagePath = Path.Combine(directory, entry.Key);
+                if (File.Exists(imagePath))
+                {
+                    using (var image = new Bitmap(imagePath))
+                    {
+                        if (image.Width != entry.Value.Width || image.Height != entry.Value.Height)
+                        {
+                            Logger.LogInformation($"Resizing {imagePath} from {image.Width}x{image.Height} to {entry.Value.Width}x{entry.Value.Height}");
+                            using (var newBitmap = new Bitmap(entry.Value.Width, entry.Value.Height))
+                            {
+                                using (var graphics = Graphics.FromImage(newBitmap))
+                                {
+                                    graphics.DrawImage(image, 0, 0, entry.Value.Width, entry.Value.Height);
+                                }
+                                image.Dispose();
+                                newBitmap.Save(imagePath);
+                            }
+                            resizedFilesCount++;
+                            resizedFiles.Add(Path.GetRelativePath(basePath, imagePath));
+                        }
+                    }
+                }
+                else
+                {
+                    Logger.LogWarning($"Image not found: {imagePath}");
+                }
+            }
+        }
+
+        Logger.LogInformation($"Resized {resizedFilesCount} files.");
+        foreach (var file in resizedFiles)
+        {
+            Logger.LogInformation(file);
+        }
     }
 }
