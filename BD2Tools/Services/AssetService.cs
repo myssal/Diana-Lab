@@ -3,6 +3,7 @@ using System.Text.Json;
 using BD2Tools.Model;
 using BD2Tools.Utils;
 using System.Drawing;
+using System.Text.RegularExpressions;
 
 namespace BD2Tools.Services;
 
@@ -146,8 +147,11 @@ public class AssetService : LoggedService<AssetService>
         {
             Directory.CreateDirectory(spineDir);
         }
-
-        var atlasFiles = Directory.GetFiles(outputPath, "*.atlas*", SearchOption.TopDirectoryOnly);
+        
+        // dirty workaround for this certain spine
+        var atlasFiles = Directory.GetFiles(outputPath, "*.atlas*", SearchOption.TopDirectoryOnly)
+            .Where(f => !Path.GetFileName(f).Equals("char000402.skel.atlas", StringComparison.OrdinalIgnoreCase) && 
+                        !Path.GetFileName(f).Equals("cutscene_char066402_camera", StringComparison.OrdinalIgnoreCase));
 
         foreach (string atlasPath in atlasFiles)
         {
@@ -325,7 +329,7 @@ public class AssetService : LoggedService<AssetService>
         return "misc";
     }
 
-    public void SortAtlas(string atlasPath = "data/atlas.json")
+    public void SortAtlas(string atlasPath = "Data/atlas.json")
     {
         Logger.LogInformation("Start sorting atlas.");
         string basePath = Path.Combine(config["output"], "sort", "ui", "atlas");
@@ -520,5 +524,57 @@ public class AssetService : LoggedService<AssetService>
         {
             Logger.LogInformation(file);
         }
+    }
+    
+    public void NormalizeCostumeIcons(string inputPath = "")
+    {
+        if (String.IsNullOrEmpty(inputPath))
+            inputPath = Path.Combine(config["output"], "sort", "ui", "icon", "costume");
+    
+        Logger.LogInformation($"Normalizing costume name: {inputPath}");
+    
+        if (!Directory.Exists(inputPath))
+        {
+            Logger.LogWarning("Directory not found: " + inputPath);
+            return;
+        }
+
+        // Regex to match files like: icon_costume123_45.ext
+        Regex regex = new Regex(@"^icon_costume(\d+)_(\d+)(\..+)?$", RegexOptions.IgnoreCase);
+
+        int renamedCount = 0;
+        int skippedCount = 0;
+
+        foreach (var file in Directory.GetFiles(inputPath, "icon_costume*"))
+        {
+            var fileName = Path.GetFileName(file);
+            var match = regex.Match(fileName);
+
+            if (match.Success)
+            {
+                string firstNum = match.Groups[1].Value; 
+                string secondNum = match.Groups[2].Value;
+                string extension = match.Groups[3].Value ?? "";
+            
+                string normalizedFirst = int.Parse(firstNum).ToString("D6");
+                string newFileName = $"icon_costume{normalizedFirst}_{secondNum}{extension}";
+
+                string newPath = Path.Combine(inputPath, newFileName);
+
+                if (!File.Exists(newPath))
+                {
+                    File.Move(file, newPath);
+                    Logger.LogInformation($"Renamed: {fileName} -> {newFileName}");
+                    renamedCount++;
+                }
+                else
+                {
+                    Logger.LogWarning($"Skipped (target exists): {newFileName}");
+                    skippedCount++;
+                }
+            }
+        }
+
+        Logger.LogInformation($"Normalization complete. Renamed: {renamedCount}, Skipped: {skippedCount}, Total: {renamedCount + skippedCount}");
     }
 }

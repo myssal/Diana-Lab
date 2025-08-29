@@ -32,36 +32,108 @@
 		"path": "ui/updateIntro"
 	},
 	{
+		"keyword": "idcard_bg_unique",
+		"path": "ui/idcard/bg/unique"
+	},
+	{
 		"keyword": "bg_idcard_bg_background",
-		"path": "ui/idcard/background"
+		"path": "ui/idcard/bg/background"
 	},
 	{
 		"keyword": "bg_idcard_bg_cutscene",
-		"path": "ui/idcard/cutscene"
+		"path": "ui/idcard/bg/cutscene"
 	},
 	{
 		"keyword": "bg_idcard_bg_eff",
-		"path": "ui/idcard/eff"
+		"path": "ui/idcard/bg/eff"
 	},
 	{
 		"keyword": "bg_idcard_bg_packevent",
-		"path": "ui/idcard/packevent"
+		"path": "ui/idcard/bg/packevent"
 	},
 	{
 		"keyword": "bg_idcard_bg_packtitle",
-		"path": "ui/idcard/packtitle"
+		"path": "ui/idcard/bg/packtitle"
 	},
 	{
 		"keyword": "bg_idcard_bg_specialillust",
-		"path": "ui/idcard/specialillust"
+		"path": "ui/idcard/bg/specialillust"
 	},
 	{
 		"keyword": "bg_idcard_sticker_costume",
-		"path": "ui/idcard/costume"
+		"path": "ui/idcard/bg/costume"
 	},
 	{
 		"keyword": "bg_idcard_",
-		"path": "ui/idcard/misc"
+		"path": "ui/idcard/bg/misc"
+	},
+	{
+		"keyword": "icon_idcard_bg_background",
+		"path": "ui/idcard/icon/background"
+	},
+	{
+		"keyword": "icon_idcard_bg_color",
+		"path": "ui/idcard/icon/color"
+	},
+	{
+		"keyword": "icon_idcard_bg_unique_color",
+		"path": "ui/idcard/icon/color/unique"
+	},
+	{
+		"keyword": "icon_idcard_bg_cutscene",
+		"path": "ui/idcard/icon/cutscene"
+	},
+	{
+		"keyword": "icon_idcard_bgeffect",
+		"path": "ui/idcard/icon/bgeffect"
+	},
+	{
+		"keyword": "icon_idcard_bg_packevent",
+		"path": "ui/idcard/icon/packevent"
+	},
+	{
+		"keyword": "icon_idcard_bg_packtitle",
+		"path": "ui/idcard/icon/packtitle"
+	},
+	{
+		"keyword": "icon_idcard_bg_specialillust",
+		"path": "ui/idcard/icon/specialillust"
+	},
+	{
+		"keyword": "icon_idcard_sticker_costume",
+		"path": "ui/idcard/icon/sticker/costume"
+	},
+	{
+		"keyword": "icon_idcard_sticker_arcade",
+		"path": "ui/idcard/icon/sticker/costume"
+	},
+	{
+		"keyword": "icon_idcard_sticker_facial",
+		"path": "ui/idcard/icon/sticker/facial"
+	},
+	{
+		"keyword": "icon_idcard_sticker_ic",
+		"path": "ui/idcard/icon/sticker/ic"
+	},
+	{
+		"keyword": "bg_idcard_sticker_ic",
+		"path": "ui/idcard/bg/sticker/ic"
+	},
+	{
+		"keyword": "icon_idcard_sticker_sd_idle",
+		"path": "ui/idcard/icon/sticker/sd/idle"
+	},
+	{
+		"keyword": "icon_idcard_sticker_npc",
+		"path": "ui/idcard/icon/sticker/sd/npc"
+	},
+	{
+		"keyword": "icon_idcard_sticker_special",
+		"path": "ui/idcard/icon/sticker/special"
+	},
+	{
+		"keyword": "icon_idcard_",
+		"path": "ui/idcard/icon/misc"
 	},
 	{
 		"keyword": "bg_attendance",
