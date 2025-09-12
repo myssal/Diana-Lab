@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using DianaLab.GUI.Views;
+using DianaLab.GUI.ViewModels;
 
 namespace DianaLab.GUI
 {
@@ -8,28 +8,7 @@ namespace DianaLab.GUI
         public MainWindow()
         {
             InitializeComponent();
-            // Set the initial view
-            MainContent.Content = new ExtractView();
-        }
-
-        private void ExtractButton_Click(object sender, RoutedEventArgs e)
-        {
-            MainContent.Content = new ExtractView();
-        }
-
-        private void Live2DAssetsButton_Click(object sender, RoutedEventArgs e)
-        {
-            MainContent.Content = new Live2DAssetsView();
-        }
-
-        private void SettingsButton_Click(object sender, RoutedEventArgs e)
-        {
-            MainContent.Content = new SettingsView();
-        }
-
-        private void AboutButton_Click(object sender, RoutedEventArgs e)
-        {
-            MainContent.Content = new AboutView();
+            DataContext = new MainViewModel();
         }
     }
 }
