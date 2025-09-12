@@ -4,10 +4,10 @@ using Extensions.Data;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using BD2Tools.Model;
-using BD2Tools.Utils;
+using DianaLab.Core.Model;
+using DianaLab.Core.Utils;
 
-namespace BD2Tools.Services;
+namespace DianaLab.Core.Services;
 
 public class CDNService : LoggedService<CDNService>
 {

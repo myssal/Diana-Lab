@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace BD2Tools.Services;
+namespace DianaLab.Core.Services;
 
 public class CharacterService
 {
@@ -172,8 +172,18 @@ public class CharacterService
                     Console.WriteLine("Invalid choice.");
                     continue;
             }
-
-            SaveJson(GetOutputPath(filePath, overwrite), characters);
+            
+            // sort based on id before rewriting into the file
+            var sorted = characters
+                .OrderBy(c =>
+                {
+                    if (int.TryParse(c.charId, out int result))
+                        return result;
+                    return int.MaxValue;
+                })
+                .ToList();
+            
+            SaveJson(GetOutputPath(filePath, overwrite), sorted);
             Console.WriteLine("Changes saved successfully.");
         }
     }

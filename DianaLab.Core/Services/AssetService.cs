@@ -1,11 +1,11 @@
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
-using BD2Tools.Model;
-using BD2Tools.Utils;
 using System.Drawing;
 using System.Text.RegularExpressions;
+using DianaLab.Core.Model;
+using DianaLab.Core.Utils;
 
-namespace BD2Tools.Services;
+namespace DianaLab.Core.Services;
 
 public class AssetService : LoggedService<AssetService>
 {
@@ -93,6 +93,7 @@ public class AssetService : LoggedService<AssetService>
             SortAsset();
             SortSpine();
             OrganizeSpine();
+            ResizeSpineImages();
             SortAtlas();
             Logger.LogInformation("Done!");
         }

@@ -1,5 +1,4 @@
-
-namespace BD2Tools.Model;
+namespace DianaLab.Core.Model;
 
 public class PathJson
 {

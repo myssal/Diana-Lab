@@ -1,7 +1,7 @@
 
 using Microsoft.Extensions.Logging;
 
-namespace BD2Tools.Utils;
+namespace DianaLab.Core.Utils;
 
 public abstract class LoggedService<T>
 {

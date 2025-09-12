@@ -1,4 +1,4 @@
-using BD2Tools.Services;
+using DianaLab.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -28,6 +28,9 @@ class Program
             .Build();
 
         var assetService = host.Services.GetRequiredService<AssetService>();
-        assetService.ResizeSpineImages();
+        assetService.ProcessAsset();
+        //assetService.CheckDuplicate(@"F:\FullSetC\Game\Active\BrownDust\BrownDust2\ui\atlas");
+        //assetService.NormalizeCostumeIcons(@"F:\FullSetC\Game\Active\BrownDust\BrownDust2\ui\icon\icon_costume");
+        //CharacterService.RunAddCLI();
     }
 }
