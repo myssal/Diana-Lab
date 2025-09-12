@@ -2,7 +2,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace PGRT.GUI.Controls;
+namespace DianaLab.GUI.Controls;
 
 public partial class LabeledControl : UserControl
 {
@@ -66,7 +66,7 @@ public partial class LabeledControl : UserControl
         get => (GridLength)GetValue(LabelWidthProperty);
         set => SetValue(LabelWidthProperty, value);
     }
-
+    
     public LabeledControl()
     {
         InitializeComponent();

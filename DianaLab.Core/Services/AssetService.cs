@@ -95,6 +95,7 @@ public class AssetService : LoggedService<AssetService>
             OrganizeSpine();
             ResizeSpineImages();
             SortAtlas();
+            NormalizeCostumeIcons();
             Logger.LogInformation("Done!");
         }
     }
