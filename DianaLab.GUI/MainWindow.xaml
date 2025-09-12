@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DianaLab.GUI"
         mc:Ignorable="d"
-        Title="DianaLab" Height="600" Width="900">
+        Title="Diana's Lab" Height="670" Width="1100">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
@@ -14,7 +14,9 @@
 
         <Border Grid.Column="0" Background="#2E3338">
             <StackPanel>
-                <Label Content="DianaLab" Foreground="White" FontSize="20" HorizontalAlignment="Center" Margin="0,10,0,20"/>
+                <Label Content="Diana's Lab" FontWeight="Bold" Foreground="White" FontSize="20" 
+                HorizontalAlignment="Center" 
+                Margin="0,10,0,20"/>
                 <Button Content="Extract" Command="{Binding ExtractViewCommand}" Style="{StaticResource SidebarButtonStyle}"/>
                 <Button Content="Live2D Assets" Command="{Binding Live2DAssetsViewCommand}" Style="{StaticResource SidebarButtonStyle}"/>
                 <Button Content="Settings" Command="{Binding SettingsViewCommand}" Style="{StaticResource SidebarButtonStyle}"/>
