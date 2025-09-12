@@ -4,9 +4,165 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DianaLab.GUI.Views"
+             xmlns:controls="clr-namespace:DianaLab.GUI.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <Label Content="Extract View" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-    </Grid>
+    
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            
+            <GroupBox Header="Asset Bundle" Grid.Row="0" Margin="5">
+                <Grid Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <controls:LabeledControl Label="Bundles location:" LabelWidth="130" Grid.Row="0">
+                        <controls:LabeledControl.InputContent>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Grid.Column="0" Margin="0,0,5,0"/>
+                                <Button Grid.Column="1" Width="33" Content="..." />
+                            </Grid>
+                        </controls:LabeledControl.InputContent>
+                    </controls:LabeledControl>
+                    
+                    <controls:LabeledControl Label="Output location:" LabelWidth="130" Grid.Row="1">
+                        <controls:LabeledControl.InputContent>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Grid.Column="0" Margin="0,0,5,0"/>
+                                <Button Grid.Column="1" Width="33" Content="..." />
+                            </Grid>
+                        </controls:LabeledControl.InputContent>
+                    </controls:LabeledControl>
+                    
+                    <controls:LabeledControl Label="Temp location:" LabelWidth="130" Grid.Row="2">
+                        <controls:LabeledControl.InputContent>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Grid.Column="0" Margin="0,0,5,0"/>
+                                <Button Grid.Column="1" Width="33" Content="..." />
+                            </Grid>
+                        </controls:LabeledControl.InputContent>
+                    </controls:LabeledControl>
+                    
+                    <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,5,0,0">
+                        <controls:LabeledControl Label="Start Date:" LabelWidth="130">
+                            <controls:LabeledControl.InputContent>
+                                <DatePicker Width="120" SelectedDate="{Binding StartDate, Mode=TwoWay}"/>
+                            </controls:LabeledControl.InputContent>
+                        </controls:LabeledControl>
+                        <controls:LabeledControl Label="End Date:" LabelWidth="130" Margin="10,0,0,0">
+                            <controls:LabeledControl.InputContent>
+                                <DatePicker Width="120" SelectedDate="{Binding EndDate, Mode=TwoWay}"/>
+                            </controls:LabeledControl.InputContent>
+                        </controls:LabeledControl>
+                    </StackPanel>
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Header="Asset Studio Config" Grid.Row="1" Margin="5">
+                <Grid Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <controls:LabeledControl Label="CLI location:" LabelWidth="100" Grid.Row="0">
+                        <controls:LabeledControl.InputContent>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Grid.Column="0" Margin="0,0,5,0"/>
+                                <Button Grid.Column="1" Width="33" Content="..."/>
+                            </Grid>
+                        </controls:LabeledControl.InputContent>
+                    </controls:LabeledControl>
+                    
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <controls:LabeledControl Label="Unity version:" LabelWidth="100" Grid.Column="0">
+                            <controls:LabeledControl.InputContent>
+                                <TextBox Grid.Column="0" Margin="0,0,5,0" Text="" />
+                            </controls:LabeledControl.InputContent>
+                        </controls:LabeledControl>
+                        
+                        <controls:LabeledControl Label="Filter type(s):" LabelWidth="90" Grid.Column="1">
+                            <controls:LabeledControl.InputContent>
+                                <ComboBox></ComboBox>
+                            </controls:LabeledControl.InputContent>
+                        </controls:LabeledControl>
+                    </Grid>
+                </Grid>    
+            </GroupBox>
+            
+            <GroupBox Header="Jobs" Grid.Row="2" Margin="5">
+                <Grid Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Grid Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        
+                        <CheckBox Content="Copy bundles" IsChecked="" Grid.Row="0" Margin="5"/>
+                        <CheckBox Content="Extract asset" IsChecked="" Grid.Row="1" Margin="5"/>
+                        <CheckBox Content="Delete redundant" IsChecked="" Grid.Row="2" Margin="5"/>
+                        <CheckBox Content="Rename spine" IsChecked="" Grid.Row="3" Margin="5"/>
+                        <CheckBox Content="Sort asset" IsChecked="" Grid.Row="4" Margin="5"/>
+                    </Grid>
+                    
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        
+                        <CheckBox Content="Sort spine" IsChecked="" Grid.Row="0" Margin="5"/>
+                        <CheckBox Content="Organize spine" IsChecked="" Grid.Row="1" Margin="5"/>
+                        <CheckBox Content="Resize spine textures" IsChecked="" Grid.Row="2" Margin="5"/>
+                        <CheckBox Content="Sort atlas" IsChecked="" Grid.Row="3" Margin="5"/>
+                        <CheckBox Content="Normalize costume name" IsChecked="" Grid.Row="4" Margin="5"/>
+                    </Grid>
+                </Grid>
+            </GroupBox>
+            
+            <Button Content="Start" Grid.Row="3" Margin="5" HorizontalAlignment="Right" Width="100"/>
+        </Grid>
+    </ScrollViewer>
 </UserControl>
