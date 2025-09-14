@@ -40,7 +40,7 @@ public class Config
         IsCopyToTemp = isCopyToTemp;
         IsWriteUpdateFilesList = isWriteUpdateFilesList;
         ExtractAsset = extractAsset;
-        DeleteRedundant = deleteRedundant;
+        DeleteRedundant = deleteRedundant;  
         RenameSpine = renameSpine;
         SortAsset = sortAsset;
         SortSpine = sortSpine;

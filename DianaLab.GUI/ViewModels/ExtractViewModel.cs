@@ -1,5 +1,5 @@
-
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows;
@@ -331,26 +331,52 @@ namespace DianaLab.GUI.ViewModels
                         SelectedFilterType = "TextAsset";
                     }
                 }
-                
-                // Job section
-                ExtractAsset = m_Config.ExtractAsset;
-                DeleteRedundant = m_Config.DeleteRedundant;
-                RenameSpine = m_Config.RenameSpine;
-                SortAsset = m_Config.SortAsset;
-                SortSpine = m_Config.SortSpine;
-                OrganizeSpine = m_Config.OrganizeSpine;
-                ResizeSpineTextures = m_Config.ResizeSpineTextures;
-                SortAtlas = m_Config.SortAtlas;
-                NormalizeCostumeName = m_Config.NormalizeCostumeName;
-                
             }
         }
 
-        private void Start(object obj)
+        private void UpdateConfig()
+        {
+            m_Config.Input = BundlesLocation;
+            m_Config.Temp = TempLocation;
+            m_Config.Output = OutputLocation;
+            m_Config.StartDate = StartDate.ToString("yyyy-MM-dd");
+            m_Config.EndDate = EndDate.ToString("yyyy-MM-dd");
+            m_Config.AssetStudio = CliLocation;
+            m_Config.UnityVersion = UnityVersion;
+            m_Config.IsCopyToTemp = CopyBundles;
+
+            switch (SelectedFilterType)
+            {
+                case "Texture2D":
+                    m_Config.Types = new List<string> { "Texture2D" };
+                    break;
+                case "TextAsset":
+                    m_Config.Types = new List<string> { "TextAsset" };
+                    break;
+                case "Both":
+                    m_Config.Types = new List<string> { "Texture2D", "TextAsset" };
+                    break;
+            }
+
+            m_Config.ExtractAsset = ExtractAsset;
+            m_Config.DeleteRedundant = DeleteRedundant;
+            m_Config.RenameSpine = RenameSpine;
+            m_Config.SortAsset = SortAsset;
+            m_Config.SortSpine = SortSpine;
+            m_Config.OrganizeSpine = OrganizeSpine;
+            m_Config.ResizeSpineTextures = ResizeSpineTextures;
+            m_Config.SortAtlas = SortAtlas;
+            m_Config.NormalizeCostumeName = NormalizeCostumeName;
+        }
+
+        private async void Start(object obj)
         {
             if (InputValiate())
             {
-                
+                UpdateConfig();
+                var logger = new NullLogger<AssetService>();
+                var assetService = new AssetService(logger, m_Config);
+                await assetService.ProcessAsset();
             }
         }
 

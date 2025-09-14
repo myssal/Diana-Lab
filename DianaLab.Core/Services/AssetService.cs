@@ -66,17 +66,13 @@ public class AssetService : LoggedService<AssetService>
                 await MoveFilesAsync(config.Input, config.Temp);
                 sw.Stop();
                 Helper.LogAppend($"- Copy files to temp folder: {sw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
-
-                var abFiles = Directory.GetFiles(config.Temp, "*__data*", SearchOption.AllDirectories).ToList();
-                sw.Restart();
-                await ExtractAsset(abFiles, config.Output, config.AssetStudio, config.UnityVersion, config.Types);
-                sw.Stop();
-                Helper.LogAppend($"- Extract assets: {sw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
             }
-            else
+
+            if(config.ExtractAsset)
             {
+                var filesToExtract = config.IsCopyToTemp ? Directory.GetFiles(config.Temp, "*__data*", SearchOption.AllDirectories).ToList() : updatedFiles;
                 sw.Restart();
-                await ExtractAsset(updatedFiles, config.Output, config.AssetStudio, config.UnityVersion, config.Types);
+                await ExtractAsset(filesToExtract, config.Output, config.AssetStudio, config.UnityVersion, config.Types);
                 sw.Stop();
                 Helper.LogAppend($"- Extract assets: {sw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
             }
@@ -89,45 +85,69 @@ public class AssetService : LoggedService<AssetService>
                 Helper.LogAppend($"- Write updated files list: {sw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
             }
 
-            sw.Restart();
-            DeleteRedundant(config.Output);
-            sw.Stop();
-            Helper.LogAppend($"- Delete redundant files: {sw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
+            if(config.DeleteRedundant)
+            {
+                sw.Restart();
+                DeleteRedundant(config.Output);
+                sw.Stop();
+                Helper.LogAppend($"- Delete redundant files: {sw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
+            }
 
-            sw.Restart();
-            RenameSpine(config.Output);
-            sw.Stop();
-            Helper.LogAppend($"- Rename spine files: {sw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
+            if(config.RenameSpine)
+            {
+                sw.Restart();
+                RenameSpine(config.Output);
+                sw.Stop();
+                Helper.LogAppend($"- Rename spine files: {sw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
+            }
 
-            sw.Restart();
-            SortAsset(config.Output, pathJson);
-            sw.Stop();
-            Helper.LogAppend($"- Sort assets: {sw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
+            if(config.SortAsset)
+            {
+                sw.Restart();
+                SortAsset(config.Output, pathJson);
+                sw.Stop();
+                Helper.LogAppend($"- Sort assets: {sw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
+            }
 
-            sw.Restart();
-            SortSpine(config.Output);
-            sw.Stop();
-            Helper.LogAppend($"- Sort spine files: {sw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
+            if(config.SortSpine)
+            {
+                sw.Restart();
+                SortSpine(config.Output);
+                sw.Stop();
+                Helper.LogAppend($"- Sort spine files: {sw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
+            }
 
-            sw.Restart();
-            OrganizeSpine(Path.Combine(config.Output, "sort", "spine"));
-            sw.Stop();
-            Helper.LogAppend($"- Organize spine: {sw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
+            if(config.OrganizeSpine)
+            {
+                sw.Restart();
+                OrganizeSpine(Path.Combine(config.Output, "sort", "spine"));
+                sw.Stop();
+                Helper.LogAppend($"- Organize spine: {sw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
+            }
 
-            sw.Restart();
-            ResizeSpineImages(Path.Combine(config.Output, "spine"));
-            sw.Stop();
-            Helper.LogAppend($"- Resize spine images: {sw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
+            if(config.ResizeSpineTextures)
+            {
+                sw.Restart();
+                ResizeSpineImages(Path.Combine(config.Output, "spine"));
+                sw.Stop();
+                Helper.LogAppend($"- Resize spine images: {sw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
+            }
 
-            sw.Restart();
-            SortAtlas(Path.Combine(config.Output, "sort", "ui", "atlas"), atlasJson);
-            sw.Stop();
-            Helper.LogAppend($"- Sort atlas: {sw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
+            if(config.SortAtlas)
+            {
+                sw.Restart();
+                SortAtlas(Path.Combine(config.Output, "sort", "ui", "atlas"), atlasJson);
+                sw.Stop();
+                Helper.LogAppend($"- Sort atlas: {sw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
+            }
 
-            sw.Restart();
-            NormalizeCostumeIcons(Path.Combine(config.Output, "sort", "ui", "icon", "costume"));
-            sw.Stop();
-            Helper.LogAppend($"- Normalize costume icons: {sw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
+            if(config.NormalizeCostumeName)
+            {
+                sw.Restart();
+                NormalizeCostumeIcons(Path.Combine(config.Output, "sort", "ui", "icon", "costume"));
+                sw.Stop();
+                Helper.LogAppend($"- Normalize costume icons: {sw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
+            }
 
             totalSw.Stop();
             Helper.LogAppend($"- Total processing time: {totalSw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
