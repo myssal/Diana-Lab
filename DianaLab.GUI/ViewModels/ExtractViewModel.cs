@@ -1,8 +1,9 @@
+
+using System;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Windows;
 using System.Windows.Input;
-using DianaLab.Core.Services;
-using DianaLab.Core.Model;
-using static DianaLab.Core.Utils.Helper;
 
 namespace DianaLab.GUI.ViewModels
 {
@@ -228,24 +229,103 @@ namespace DianaLab.GUI.ViewModels
             }
         }
 
+        private bool m_BundlesLocationInvalid;
+        public bool BundlesLocationInvalid
+        {
+            get => m_BundlesLocationInvalid;
+            set
+            {
+                m_BundlesLocationInvalid = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool m_OutputLocationInvalid;
+        public bool OutputLocationInvalid
+        {
+            get => m_OutputLocationInvalid;
+            set
+            {
+                m_OutputLocationInvalid = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool m_TempLocationInvalid;
+        public bool TempLocationInvalid
+        {
+            get => m_TempLocationInvalid;
+            set
+            {
+                m_TempLocationInvalid = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool m_CliLocationInvalid;
+        public bool CliLocationInvalid
+        {
+            get => m_CliLocationInvalid;
+            set
+            {
+                m_CliLocationInvalid = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool m_EndDateInvalid;
+        public bool EndDateInvalid
+        {
+            get => m_EndDateInvalid;
+            set
+            {
+                m_EndDateInvalid = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ICommand StartCommand { get; }
 
         public ExtractViewModel()
         {
             FilterTypes = new ObservableCollection<string> { "Texture2D", "TextAsset", "Both" };
             SelectedFilterType = "Texture2D";
+            StartDate = DateTime.Now;
+            EndDate = DateTime.Now;
 
             StartCommand = new RelayCommand(Start);
         }
 
         private void Start(object obj)
         {
-            
+            if (InputValiate())
+            {
+                
+            }
         }
 
-        public void ParseConfig()
+        public bool InputValiate()
         {
-            Config config = new Config();
+            BundlesLocationInvalid = !Directory.Exists(BundlesLocation);
+            OutputLocationInvalid = !Directory.Exists(OutputLocation);
+            CliLocationInvalid = !File.Exists(CliLocation);
+            EndDateInvalid = StartDate > EndDate;
+
+            if (CopyToTempFolder)
+            {
+                TempLocationInvalid = !Directory.Exists(TempLocation);
+            }
+            else
+            {
+                TempLocationInvalid = false;
+            }
+
+            if (BundlesLocationInvalid || OutputLocationInvalid || CliLocationInvalid || (CopyToTempFolder && TempLocationInvalid) || EndDateInvalid)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }
+

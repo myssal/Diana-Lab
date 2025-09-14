@@ -32,12 +32,19 @@
                     <controls:LabeledControl Label="Bundles location:" LabelWidth="130" Grid.Row="0">
                         <controls:LabeledControl.InputContent>
                             <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBox Grid.Column="0" Margin="0,0,5,0" Text="{Binding BundlesLocation}"/>
-                                <Button Grid.Column="1" Width="33" Content="..." />
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox Grid.Column="0" Margin="0,0,5,0" Text="{Binding BundlesLocation}"/>
+                                    <Button Grid.Column="1" Width="33" Content="..." />
+                                </Grid>
+                                <TextBlock Grid.Row="1" Text="Invalid folder path" Foreground="Red" FontSize="10" Visibility="{Binding BundlesLocationInvalid, Converter={StaticResource booleanToVisibilityConverter}}"/>
                             </Grid>
                         </controls:LabeledControl.InputContent>
                     </controls:LabeledControl>
@@ -45,12 +52,19 @@
                     <controls:LabeledControl Label="Output location:" LabelWidth="130" Grid.Row="1">
                         <controls:LabeledControl.InputContent>
                             <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBox Grid.Column="0" Margin="0,0,5,0" Text="{Binding OutputLocation}"/>
-                                <Button Grid.Column="1" Width="33" Content="..." />
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox Grid.Column="0" Margin="0,0,5,0" Text="{Binding OutputLocation}"/>
+                                    <Button Grid.Column="1" Width="33" Content="..." />
+                                </Grid>
+                                <TextBlock Grid.Row="1" Text="Invalid folder path" Foreground="Red" FontSize="10" Visibility="{Binding OutputLocationInvalid, Converter={StaticResource booleanToVisibilityConverter}}"/>
                             </Grid>
                         </controls:LabeledControl.InputContent>
                     </controls:LabeledControl>
@@ -60,12 +74,19 @@
                     <controls:LabeledControl Label="Temp location:" LabelWidth="130" Grid.Row="3" Visibility="{Binding CopyToTempFolder, Converter={StaticResource booleanToVisibilityConverter}}">
                         <controls:LabeledControl.InputContent>
                             <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBox Grid.Column="0" Margin="0,0,5,0" Text="{Binding TempLocation}"/>
-                                <Button Grid.Column="1" Width="33" Content="..." />
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox Grid.Column="0" Margin="0,0,5,0" Text="{Binding TempLocation}"/>
+                                    <Button Grid.Column="1" Width="33" Content="..." />
+                                </Grid>
+                                <TextBlock Grid.Row="1" Text="Invalid folder path" Foreground="Red" FontSize="10" Visibility="{Binding TempLocationInvalid, Converter={StaticResource booleanToVisibilityConverter}}"/>
                             </Grid>
                         </controls:LabeledControl.InputContent>
                     </controls:LabeledControl>
@@ -78,7 +99,13 @@
                         </controls:LabeledControl>
                         <controls:LabeledControl Label="End Date:" LabelWidth="130" Margin="10,0,0,0">
                             <controls:LabeledControl.InputContent>
-                                <DatePicker Width="120" SelectedDate="{Binding EndDate, Mode=TwoWay}"/>
+                                <StackPanel>
+                                    <DatePicker Grid.Row="0" Width="120" SelectedDate="{Binding EndDate, 
+                                    Mode=TwoWay}" HorizontalAlignment="Left"/>
+                                    <TextBlock Grid.Row="1" Text="End date cannot be earlier than start date" Foreground="Red" 
+                                               FontSize="10" Visibility="{Binding EndDateInvalid, Converter={StaticResource 
+                                    booleanToVisibilityConverter}}"/>
+                                </StackPanel>
                             </controls:LabeledControl.InputContent>
                         </controls:LabeledControl>
                     </StackPanel>
@@ -96,12 +123,19 @@
                     <controls:LabeledControl Label="CLI location:" LabelWidth="100" Grid.Row="0">
                         <controls:LabeledControl.InputContent>
                             <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBox Grid.Column="0" Margin="0,0,5,0" Text="{Binding CliLocation}"/>
-                                <Button Grid.Column="1" Width="33" Content="..."/>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox Grid.Column="0" Margin="0,0,5,0" Text="{Binding CliLocation}"/>
+                                    <Button Grid.Column="1" Width="33" Content="..."/>
+                                </Grid>
+                                <TextBlock Grid.Row="1" Text="Invalid file path" Foreground="Red" FontSize="10" Visibility="{Binding CliLocationInvalid, Converter={StaticResource booleanToVisibilityConverter}}"/>
                             </Grid>
                         </controls:LabeledControl.InputContent>
                     </controls:LabeledControl>
