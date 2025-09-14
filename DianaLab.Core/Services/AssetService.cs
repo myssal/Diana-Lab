@@ -19,7 +19,7 @@ public class AssetService : LoggedService<AssetService>
     public AssetService(ILogger<AssetService> logger) : base(logger)
     {
         updatedFiles = new List<string>();
-        GetConfigureData();
+        config = GetConfigureData(logger);
         if (config != null)
         {
             updatedFiles = Helper.GetFilesBasedOnDate(config.Input, config.StartDate, config.EndDate);
@@ -161,12 +161,13 @@ public class AssetService : LoggedService<AssetService>
         Logger.LogInformation($"Write {updatedFiles.Count} updated files to {outputPath}.");
     }
     
-    public void GetConfigureData()
+    public static Config GetConfigureData(ILogger Logger)
     {
+        Config cfg = new Config();
         if (!File.Exists(ConfigPath))
         {
             Logger.LogError($"Config file not found at {Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ConfigPath)}.");
-            return;
+            return cfg;
         }
         
         var sw = Stopwatch.StartNew();
@@ -175,14 +176,16 @@ public class AssetService : LoggedService<AssetService>
         try
         {
             var jsonString = File.ReadAllText(ConfigPath);
-            config = JsonSerializer.Deserialize<Config>(jsonString);
+            cfg = JsonSerializer.Deserialize<Config>(jsonString);
             sw.Stop();
             Logger.LogInformation($"Reading config took {sw.ElapsedMilliseconds} ms.");
+            return cfg;
         }
         catch (Exception ex)
         {
             Logger.LogError($"Error reading or deserializing config file: {ex.Message}");
         }
+        return cfg;
     }
 
     public async Task MoveFilesAsync(string inputPath, string destPath, int maxConcurrency = 4)

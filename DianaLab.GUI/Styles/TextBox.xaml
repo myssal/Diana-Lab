@@ -2,6 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!-- Modern TextBox Style -->
     <Style TargetType="{x:Type TextBox}">
+        <Setter Property="FontSize" Value="14"/>
         <Setter Property="Padding" Value="5"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="BorderBrush" Value="#CCCCCC"/>

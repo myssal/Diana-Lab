@@ -4,11 +4,18 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
+using DianaLab.Core.Model;
+using DianaLab.Core.Services;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using System.Linq;
 
 namespace DianaLab.GUI.ViewModels
 {
     public class ExtractViewModel : BaseViewModel
     {
+        private Config m_Config;
+        
         private bool m_CopyToTempFolder;
         public bool CopyToTempFolder
         {
@@ -288,12 +295,54 @@ namespace DianaLab.GUI.ViewModels
 
         public ExtractViewModel()
         {
-            FilterTypes = new ObservableCollection<string> { "Texture2D", "TextAsset", "Both" };
-            SelectedFilterType = "Texture2D";
+            FilterTypes = new ObservableCollection<string> { "Texture2D", "TextAsset", "Both (Texture2D & TextAsset)" };
+            SelectedFilterType = "Both (Texture2D & TextAsset)";
             StartDate = DateTime.Now;
             EndDate = DateTime.Now;
 
             StartCommand = new RelayCommand(Start);
+            Preload();
+        }
+
+        private void Preload()
+        {
+            m_Config = AssetService.GetConfigureData(new NullLogger<ExtractViewModel>());
+            if (m_Config != null)
+            {
+                BundlesLocation = m_Config.Input;
+                TempLocation = m_Config.Temp;
+                OutputLocation = m_Config.Output;
+                if (DateTime.TryParse(m_Config.StartDate, out var startDate))
+                {
+                    StartDate = startDate;
+                }
+                if (DateTime.TryParse(m_Config.EndDate, out var endDate))
+                {
+                    EndDate = endDate;
+                }
+                CliLocation = m_Config.AssetStudio;
+                UnityVersion = m_Config.UnityVersion;
+                CopyToTempFolder = m_Config.IsCopyToTemp;
+
+                if (m_Config.Types != null)
+                {
+                    bool hasTexture2D = m_Config.Types.Contains("Texture2D");
+                    bool hasTextAsset = m_Config.Types.Contains("TextAsset");
+
+                    if (hasTexture2D && hasTextAsset)
+                    {
+                        SelectedFilterType = "Both (Texture2D & TextAsset)";
+                    }
+                    else if (hasTexture2D)
+                    {
+                        SelectedFilterType = "Texture2D";
+                    }
+                    else if (hasTextAsset)
+                    {
+                        SelectedFilterType = "TextAsset";
+                    }
+                }
+            }
         }
 
         private void Start(object obj)
@@ -328,4 +377,3 @@ namespace DianaLab.GUI.ViewModels
         }
     }
 }
-

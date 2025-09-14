@@ -1,4 +1,5 @@
 using System.Windows.Controls;
+using DianaLab.GUI.ViewModels;
 
 namespace DianaLab.GUI.Views
 {
@@ -7,6 +8,7 @@ namespace DianaLab.GUI.Views
         public ExtractView()
         {
             InitializeComponent();
+            DataContext = new ExtractViewModel();
         }
     }
 }
