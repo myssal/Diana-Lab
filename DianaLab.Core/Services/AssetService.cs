@@ -27,7 +27,20 @@ public class AssetService : LoggedService<AssetService>
                 Logger.LogInformation("No files modified found in specific time range.");
         }
     }
-
+    
+    // parse config variable from gui
+    public AssetService(ILogger<AssetService> logger, Config config) : base(logger)
+    {
+        updatedFiles = new List<string>();
+        this.config = config;
+        if (config != null)
+        {
+            updatedFiles = Helper.GetFilesBasedOnDate(config.Input, config.StartDate, config.EndDate);
+            if (updatedFiles.Count == 0)
+                Logger.LogInformation("No files modified found in specific time range.");
+        }
+    }
+    
     public async Task ProcessAsset()
     {
         string logOutput = Path.Combine(config.Output, "sort" ,"process.log");

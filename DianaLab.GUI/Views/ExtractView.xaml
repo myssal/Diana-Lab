@@ -5,9 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DianaLab.GUI.Views"
              xmlns:controls="clr-namespace:DianaLab.GUI.Controls"
+             xmlns:converters="clr-namespace:DianaLab.GUI.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    
+    <UserControl.Resources>
+        <converters:BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter" />
+    </UserControl.Resources>
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
         <Grid>
             <Grid.RowDefinitions>
@@ -24,6 +27,7 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <controls:LabeledControl Label="Bundles location:" LabelWidth="130" Grid.Row="0">
                         <controls:LabeledControl.InputContent>
@@ -32,7 +36,7 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBox Grid.Column="0" Margin="0,0,5,0"/>
+                                <TextBox Grid.Column="0" Margin="0,0,5,0" Text="{Binding BundlesLocation}"/>
                                 <Button Grid.Column="1" Width="33" Content="..." />
                             </Grid>
                         </controls:LabeledControl.InputContent>
@@ -45,26 +49,28 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBox Grid.Column="0" Margin="0,0,5,0"/>
+                                <TextBox Grid.Column="0" Margin="0,0,5,0" Text="{Binding OutputLocation}"/>
                                 <Button Grid.Column="1" Width="33" Content="..." />
                             </Grid>
                         </controls:LabeledControl.InputContent>
                     </controls:LabeledControl>
                     
-                    <controls:LabeledControl Label="Temp location:" LabelWidth="130" Grid.Row="2">
+                    <CheckBox Grid.Row="2" Content="Copy to temp folder" IsChecked="{Binding CopyToTempFolder}" Margin="5,5,0,0"/>
+
+                    <controls:LabeledControl Label="Temp location:" LabelWidth="130" Grid.Row="3" Visibility="{Binding CopyToTempFolder, Converter={StaticResource booleanToVisibilityConverter}}">
                         <controls:LabeledControl.InputContent>
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBox Grid.Column="0" Margin="0,0,5,0"/>
+                                <TextBox Grid.Column="0" Margin="0,0,5,0" Text="{Binding TempLocation}"/>
                                 <Button Grid.Column="1" Width="33" Content="..." />
                             </Grid>
                         </controls:LabeledControl.InputContent>
                     </controls:LabeledControl>
                     
-                    <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,5,0,0">
+                    <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="0,5,0,0">
                         <controls:LabeledControl Label="Start Date:" LabelWidth="130">
                             <controls:LabeledControl.InputContent>
                                 <DatePicker Width="120" SelectedDate="{Binding StartDate, Mode=TwoWay}"/>
@@ -94,7 +100,7 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBox Grid.Column="0" Margin="0,0,5,0"/>
+                                <TextBox Grid.Column="0" Margin="0,0,5,0" Text="{Binding CliLocation}"/>
                                 <Button Grid.Column="1" Width="33" Content="..."/>
                             </Grid>
                         </controls:LabeledControl.InputContent>
@@ -108,13 +114,13 @@
                         
                         <controls:LabeledControl Label="Unity version:" LabelWidth="100" Grid.Column="0">
                             <controls:LabeledControl.InputContent>
-                                <TextBox Grid.Column="0" Margin="0,0,5,0" Text="" />
+                                <TextBox Grid.Column="0" Margin="0,0,5,0" Text="{Binding UnityVersion}" />
                             </controls:LabeledControl.InputContent>
                         </controls:LabeledControl>
                         
                         <controls:LabeledControl Label="Filter type(s):" LabelWidth="90" Grid.Column="1">
                             <controls:LabeledControl.InputContent>
-                                <ComboBox></ComboBox>
+                                <ComboBox ItemsSource="{Binding FilterTypes}" SelectedItem="{Binding SelectedFilterType}"></ComboBox>
                             </controls:LabeledControl.InputContent>
                         </controls:LabeledControl>
                     </Grid>
@@ -137,11 +143,11 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         
-                        <CheckBox Content="Copy bundles" IsChecked="" Grid.Row="0" Margin="5"/>
-                        <CheckBox Content="Extract asset" IsChecked="" Grid.Row="1" Margin="5"/>
-                        <CheckBox Content="Delete redundant" IsChecked="" Grid.Row="2" Margin="5"/>
-                        <CheckBox Content="Rename spine" IsChecked="" Grid.Row="3" Margin="5"/>
-                        <CheckBox Content="Sort asset" IsChecked="" Grid.Row="4" Margin="5"/>
+                        <CheckBox Content="Copy bundles" IsChecked="{Binding CopyBundles}" Grid.Row="0" Margin="5"/>
+                        <CheckBox Content="Extract asset" IsChecked="{Binding ExtractAsset}" Grid.Row="1" Margin="5"/>
+                        <CheckBox Content="Delete redundant" IsChecked="{Binding DeleteRedundant}" Grid.Row="2" Margin="5"/>
+                        <CheckBox Content="Rename spine" IsChecked="{Binding RenameSpine}" Grid.Row="3" Margin="5"/>
+                        <CheckBox Content="Sort asset" IsChecked="{Binding SortAsset}" Grid.Row="4" Margin="5"/>
                     </Grid>
                     
                     <Grid Grid.Column="1">
@@ -153,16 +159,16 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         
-                        <CheckBox Content="Sort spine" IsChecked="" Grid.Row="0" Margin="5"/>
-                        <CheckBox Content="Organize spine" IsChecked="" Grid.Row="1" Margin="5"/>
-                        <CheckBox Content="Resize spine textures" IsChecked="" Grid.Row="2" Margin="5"/>
-                        <CheckBox Content="Sort atlas" IsChecked="" Grid.Row="3" Margin="5"/>
-                        <CheckBox Content="Normalize costume name" IsChecked="" Grid.Row="4" Margin="5"/>
+                        <CheckBox Content="Sort spine" IsChecked="{Binding SortSpine}" Grid.Row="0" Margin="5"/>
+                        <CheckBox Content="Organize spine" IsChecked="{Binding OrganizeSpine}" Grid.Row="1" Margin="5"/>
+                        <CheckBox Content="Resize spine textures" IsChecked="{Binding ResizeSpineTextures}" Grid.Row="2" Margin="5"/>
+                        <CheckBox Content="Sort atlas" IsChecked="{Binding SortAtlas}" Grid.Row="3" Margin="5"/>
+                        <CheckBox Content="Normalize costume name" IsChecked="{Binding NormalizeCostumeName}" Grid.Row="4" Margin="5"/>
                     </Grid>
                 </Grid>
             </GroupBox>
             
-            <Button Content="Start" Grid.Row="3" Margin="5" HorizontalAlignment="Right" Width="100"/>
+            <Button Content="Start" Grid.Row="3" Margin="5" HorizontalAlignment="Right" Width="100" Command="{Binding StartCommand}"/>
         </Grid>
     </ScrollViewer>
 </UserControl>

@@ -124,4 +124,5 @@ public class Helper
     public static void LogAppend(string text, string filePath) => File.AppendAllText(filePath, text + Environment
         .NewLine);
 
+    public static bool CheckValidFolder(string path) => Directory.Exists(path);
 }

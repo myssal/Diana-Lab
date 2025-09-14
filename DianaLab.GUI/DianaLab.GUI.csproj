@@ -8,4 +8,8 @@
         <UseWPF>true</UseWPF>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\DianaLab.Core\DianaLab.Core.csproj" />
+    </ItemGroup>
+
 </Project>
