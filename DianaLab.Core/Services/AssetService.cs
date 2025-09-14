@@ -1,16 +1,16 @@
+using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using System.Drawing;
 using System.Text.RegularExpressions;
 using DianaLab.Core.Model;
 using DianaLab.Core.Utils;
-
 namespace DianaLab.Core.Services;
 
 public class AssetService : LoggedService<AssetService>
 {
-    private readonly Dictionary<string, string> config;
-    private const string ConfigPath = "config.txt";
+    private Config config;
+    private const string ConfigPath = "config.json";
     public static string deleteTxt = @"Data\delete.txt";
     public static string atlasJson = @"Data\atlas.json";
     public static string pathJson = @"Data\path.json";
@@ -18,18 +18,136 @@ public class AssetService : LoggedService<AssetService>
 
     public AssetService(ILogger<AssetService> logger) : base(logger)
     {
-        config = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         updatedFiles = new List<string>();
         GetConfigureData();
-        if (config.Count > 0)
+        if (config != null)
         {
-            updatedFiles = Helper.GetFilesBasedOnDate(config["input"], int.Parse(config["check_option"]), config["date"],
-                int.Parse(config["fallback_date"]));
+            updatedFiles = Helper.GetFilesBasedOnDate(config.Input, config.StartDate, config.EndDate);
             if (updatedFiles.Count == 0)
-                Logger.LogInformation("No files modified found in specific time range, consider changing time date in config.txt.");
+                Logger.LogInformation("No files modified found in specific time range.");
         }
     }
 
+    public async Task ProcessAsset()
+    {
+        string logOutput = Path.Combine(config.Output, "sort" ,"process.log");
+        await using (File.Create(logOutput)) { }
+
+        if (updatedFiles.Count > 0)
+        {
+            var totalSw = Stopwatch.StartNew();
+            var sw = Stopwatch.StartNew();
+
+            Helper.CleanDirectory(config.Output);
+            sw.Stop();
+            Helper.LogAppend($"- Clean output dir in: {sw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
+
+            if (config.IsCopyToTemp)
+            {
+                sw.Restart();
+                Helper.CleanDirectory(config.Temp);
+                sw.Stop();
+                Helper.LogAppend($"- Clean temp dir in: {sw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
+
+                sw.Restart();
+                await MoveFilesAsync(config.Input, config.Temp);
+                sw.Stop();
+                Helper.LogAppend($"- Copy files to temp folder: {sw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
+
+                var abFiles = Directory.GetFiles(config.Temp, "*__data*", SearchOption.AllDirectories).ToList();
+                sw.Restart();
+                await ExtractAsset(abFiles, config.Output, config.AssetStudio, config.UnityVersion, config.Types);
+                sw.Stop();
+                Helper.LogAppend($"- Extract assets: {sw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
+            }
+            else
+            {
+                sw.Restart();
+                await ExtractAsset(updatedFiles, config.Output, config.AssetStudio, config.UnityVersion, config.Types);
+                sw.Stop();
+                Helper.LogAppend($"- Extract assets: {sw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
+            }
+
+            if (config.IsWriteUpdateFilesList)
+            {
+                sw.Restart();
+                WriteUpdateFiles(updatedFiles, Path.Combine(config.Output, "updated_files.txt"));
+                sw.Stop();
+                Helper.LogAppend($"- Write updated files list: {sw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
+            }
+
+            sw.Restart();
+            DeleteRedundant(config.Output);
+            sw.Stop();
+            Helper.LogAppend($"- Delete redundant files: {sw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
+
+            sw.Restart();
+            RenameSpine(config.Output);
+            sw.Stop();
+            Helper.LogAppend($"- Rename spine files: {sw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
+
+            sw.Restart();
+            SortAsset(config.Output, pathJson);
+            sw.Stop();
+            Helper.LogAppend($"- Sort assets: {sw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
+
+            sw.Restart();
+            SortSpine(config.Output);
+            sw.Stop();
+            Helper.LogAppend($"- Sort spine files: {sw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
+
+            sw.Restart();
+            OrganizeSpine(Path.Combine(config.Output, "sort", "spine"));
+            sw.Stop();
+            Helper.LogAppend($"- Organize spine: {sw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
+
+            sw.Restart();
+            ResizeSpineImages(Path.Combine(config.Output, "spine"));
+            sw.Stop();
+            Helper.LogAppend($"- Resize spine images: {sw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
+
+            sw.Restart();
+            SortAtlas(Path.Combine(config.Output, "sort", "ui", "atlas"), atlasJson);
+            sw.Stop();
+            Helper.LogAppend($"- Sort atlas: {sw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
+
+            sw.Restart();
+            NormalizeCostumeIcons(Path.Combine(config.Output, "sort", "ui", "icon", "costume"));
+            sw.Stop();
+            Helper.LogAppend($"- Normalize costume icons: {sw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
+
+            totalSw.Stop();
+            Helper.LogAppend($"- Total processing time: {totalSw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
+
+            Logger.LogInformation("Done!");
+            Helper.LogAppend("- Process completed successfully.", logOutput);
+        }
+        else
+        {
+            Logger.LogInformation("No updated files to process.");
+            Helper.LogAppend("- No updated files found. Nothing to process.", logOutput);
+        }
+    }
+
+    public void WriteUpdateFiles(List<string> updatedFiles, string outputPath)
+    {
+        if (updatedFiles == null || updatedFiles.Count == 0)
+        {
+            Logger.LogWarning("No updated files to write.");
+            return;
+        }
+
+        var directory = Path.GetDirectoryName(outputPath);
+        if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+        
+        File.WriteAllLines(outputPath, updatedFiles);
+
+        Logger.LogInformation($"Write {updatedFiles.Count} updated files to {outputPath}.");
+    }
+    
     public void GetConfigureData()
     {
         if (!File.Exists(ConfigPath))
@@ -37,72 +155,75 @@ public class AssetService : LoggedService<AssetService>
             Logger.LogError($"Config file not found at {Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ConfigPath)}.");
             return;
         }
-
+        
+        var sw = Stopwatch.StartNew();
         Logger.LogInformation($"Reading config file from {ConfigPath}");
 
         try
         {
-            foreach (var line in File.ReadLines(ConfigPath))
-            {
-                int separatorIndex = line.IndexOf(": ");
-                if (separatorIndex > 0)
-                {
-                    var key = line.Substring(0, separatorIndex).Trim();
-                    var value = line.Substring(separatorIndex + 2).Trim();
-                    config[key] = value;
-                }
-            }
+            var jsonString = File.ReadAllText(ConfigPath);
+            config = JsonSerializer.Deserialize<Config>(jsonString);
+            sw.Stop();
+            Logger.LogInformation($"Reading config took {sw.ElapsedMilliseconds} ms.");
         }
         catch (Exception ex)
         {
-            Logger.LogError($"Error reading config file: {ex.Message}");
+            Logger.LogError($"Error reading or deserializing config file: {ex.Message}");
         }
     }
 
-    public void MoveFiles()
+    public async Task MoveFilesAsync(string inputPath, string destPath, int maxConcurrency = 4)
     {
-        foreach (var file in updatedFiles)
+        var directories = updatedFiles
+            .Select(file => Path.GetDirectoryName(Path.Combine(destPath, Path.GetRelativePath(inputPath, file)))!)
+            .Distinct();
+
+        foreach (var dir in directories)
         {
-            string relativePath = Path.GetRelativePath(config["input"], file);
-            string destinationPath = Path.Combine(config["temp"], relativePath);
-            string? destinationDir = Path.GetDirectoryName(destinationPath);
-            if (!Directory.Exists(destinationDir))
+            Directory.CreateDirectory(dir);
+        }
+        
+        using var semaphore = new SemaphoreSlim(maxConcurrency);
+
+        var tasks = updatedFiles.Select(async file =>
+        {
+            await semaphore.WaitAsync();
+            try
             {
-                Directory.CreateDirectory(destinationDir!);
+                string relativePath = Path.GetRelativePath(inputPath, file);
+                string destinationPath = Path.Combine(destPath, relativePath);
+
+                Logger.LogInformation($"Copying {file} -> {destinationPath}");
+                
+                await using var sourceStream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read, 81920, useAsync: true);
+                await using var destinationStream = new FileStream(destinationPath, FileMode.Create, FileAccess.Write, FileShare.None, 81920, useAsync: true);
+                await sourceStream.CopyToAsync(destinationStream);
             }
-            Logger.LogInformation($"Copying {file} -> {destinationDir}");
-            File.Copy(file, destinationPath, overwrite: true);
-        }
+            finally
+            {
+                semaphore.Release();
+            }
+        });
+
+        await Task.WhenAll(tasks);
     }
 
-    public void ExtractAsset()
+    public async Task ExtractAsset(List<string> abFiles, string outputPath, string assetStudioPath, string unityVersion, 
+        List<string> 
+            types)
     {
-        Logger.LogInformation($"Extracting from {config["temp"]}");
-        string parameter = $"{config["temp"]} {config["output"]} --types Texture2D TextAsset --game Normal --unity_version 2022.3.22f1 --group_assets None";
-        Helper.RunCommand(config["asset-studio"], parameter);
-    }
-
-    public void ProcessAsset()
-    {
-        if (updatedFiles.Count > 0)
+        var tasks = new List<Task>();
+        string typesStr = string.Join(" ", types);
+        foreach (var ab in abFiles)
         {
-            MoveFiles();
-            ExtractAsset();
-            DeleteRedundant();
-            RenameSpine();
-            SortAsset();
-            SortSpine();
-            OrganizeSpine();
-            ResizeSpineImages();
-            SortAtlas();
-            NormalizeCostumeIcons();
-            Logger.LogInformation("Done!");
+            string parameter = $"\"{ab}\" \"{outputPath}\" --types {typesStr} --game Normal --unity_version {unityVersion} --group_assets None";
+            tasks.Add(Helper.RunCommandAsync(assetStudioPath, parameter));
         }
+        await Task.WhenAll(tasks);
     }
-
-    public void DeleteRedundant(string inputPath = "")
+    
+    public void DeleteRedundant(string inputPath)
     {
-        if (string.IsNullOrEmpty(inputPath)) inputPath = config["output"];
         Logger.LogInformation("Start cleaning redundant assets");
         List<string> deleteList = File.ReadAllLines(deleteTxt).ToList();
         deleteList.Sort();
@@ -126,9 +247,8 @@ public class AssetService : LoggedService<AssetService>
         Logger.LogInformation($"Deleted {count} files.");
     }
 
-    public void RenameSpine(string inputPath = "")
+    public void RenameSpine(string inputPath)
     {
-        if (string.IsNullOrEmpty(inputPath)) inputPath = config["output"];
         Logger.LogInformation("Start renaming spine");
         List<string> spineFile = Directory.GetFiles(inputPath, "*.asset*", SearchOption.TopDirectoryOnly).ToList();
         spineFile.AddRange(Directory.GetFiles(inputPath, "*.prefab*", SearchOption.TopDirectoryOnly).ToList());
@@ -139,18 +259,17 @@ public class AssetService : LoggedService<AssetService>
         }
     }
 
-    public void SortSpine()
+    public void SortSpine(string outputPath)
     {
         Logger.LogInformation("Start sorting spine.");
-        string outputPath = config["output"];
-        string spineDir = Path.Combine(outputPath, "spine");
+        string spineDir = Path.Combine(outputPath, "sort", "spine");
 
         if (!Directory.Exists(spineDir))
         {
             Directory.CreateDirectory(spineDir);
         }
         
-        // dirty workaround for this certain spine
+        // dirty workaround for these certain spines
         var atlasFiles = Directory.GetFiles(outputPath, "*.atlas*", SearchOption.TopDirectoryOnly)
             .Where(f => !Path.GetFileName(f).Equals("char000402.skel.atlas", StringComparison.OrdinalIgnoreCase) && 
                         !Path.GetFileName(f).Equals("cutscene_char066402_camera", StringComparison.OrdinalIgnoreCase));
@@ -159,9 +278,6 @@ public class AssetService : LoggedService<AssetService>
         {
             string[] atlasContent = File.ReadAllLines(atlasPath);
             var textureFiles = atlasContent.Where(line => line.Contains(".png")).ToList();
-            var textureBg = Directory.GetFiles(outputPath, $"*{Path.GetFileNameWithoutExtension(atlasPath)}_back*",
-                SearchOption.TopDirectoryOnly).ToList();
-            textureFiles.AddRange(textureBg);
             Logger.LogInformation($"Found {textureFiles.Count} textures in {Path.GetFileName(atlasPath)}.");
 
             string baseFileName = Path.GetFileNameWithoutExtension(atlasPath);
@@ -212,15 +328,14 @@ public class AssetService : LoggedService<AssetService>
         }
     }
 
-    public void SortAsset()
+    public void SortAsset(string outputPath, string pathJsonPath)
     {
         Logger.LogInformation("Start sorting assets.");
-        string outputPath = config["output"];
         string sortPath = Path.Combine(outputPath, "sort");
         if (!Directory.Exists(sortPath))
             Directory.CreateDirectory(sortPath);
 
-        string jsonContent = File.ReadAllText(pathJson);
+        string jsonContent = File.ReadAllText(pathJsonPath);
         var pathMappings = JsonSerializer.Deserialize<List<PathJson>>(jsonContent);
 
         foreach (var mapping in pathMappings!)
@@ -262,13 +377,11 @@ public class AssetService : LoggedService<AssetService>
         Logger.LogInformation($"Moved {movedFiles} files out of {totalFiles}.");
     }
 
-    public void OrganizeSpine()
+    public void OrganizeSpine(string basePath)
     {
-        string basePath = Path.Combine(config["output"], "spine");
-
         if (!Directory.Exists(basePath))
         {
-            Console.WriteLine($"Base path does not exist: {basePath}");
+            Logger.LogInformation($"Base path does not exist: {basePath}");
             return;
         }
 
@@ -279,7 +392,7 @@ public class AssetService : LoggedService<AssetService>
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Failed to read directories: {ex.Message}");
+            Logger.LogInformation($"Failed to read directories: {ex.Message}");
             return;
         }
 
@@ -299,16 +412,16 @@ public class AssetService : LoggedService<AssetService>
 
                 if (Directory.Exists(destFullPath))
                 {
-                    Console.WriteLine($"Warning: Destination already exists, skipping: {destFullPath}");
+                    Logger.LogInformation($"Warning: Destination already exists, skipping: {destFullPath}");
                     continue;
                 }
 
                 Directory.Move(itemPath, destFullPath);
-                Console.WriteLine($"Moved: {folderName} -> {destination}");
+                Logger.LogInformation($"Moved: {folderName} -> {destination}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error moving '{folderName}' to '{destination}': {ex.Message}");
+                Logger.LogInformation($"Error moving '{folderName}' to '{destination}': {ex.Message}");
             }
         }
     }
@@ -331,14 +444,13 @@ public class AssetService : LoggedService<AssetService>
         return "misc";
     }
 
-    public void SortAtlas(string atlasPath = "Data/atlas.json")
+    public void SortAtlas(string basePath, string atlasJsonPath)
     {
         Logger.LogInformation("Start sorting atlas.");
-        string basePath = Path.Combine(config["output"], "sort", "ui", "atlas");
 
         List<string> atlasContents = Directory.GetFiles(basePath, "*.png*", SearchOption.TopDirectoryOnly).ToList();
         Logger.LogInformation($"Found {atlasContents.Count} atlas files to sort in {basePath}."); ;
-        string jsonContent = File.ReadAllText(atlasPath);
+        string jsonContent = File.ReadAllText(atlasJsonPath);
         var atlasMappings = JsonSerializer.Deserialize<List<PathJson>>(jsonContent);
 
         foreach (var file in atlasContents)
@@ -452,9 +564,8 @@ public class AssetService : LoggedService<AssetService>
         return lastDash > 0 ? filename.Substring(0, lastDash) : filename;
     }
 
-    public void ResizeSpineImages()
+    public void ResizeSpineImages(string basePath)
     {
-        string basePath = Path.Combine(config["output"], "spine");
         if (!Directory.Exists(basePath))
         {
             Logger.LogWarning($"Spine directory not found: {basePath}");
@@ -528,11 +639,8 @@ public class AssetService : LoggedService<AssetService>
         }
     }
     
-    public void NormalizeCostumeIcons(string inputPath = "")
+    public void NormalizeCostumeIcons(string inputPath)
     {
-        if (String.IsNullOrEmpty(inputPath))
-            inputPath = Path.Combine(config["output"], "sort", "ui", "icon", "costume");
-    
         Logger.LogInformation($"Normalizing costume name: {inputPath}");
     
         if (!Directory.Exists(inputPath))
@@ -579,4 +687,29 @@ public class AssetService : LoggedService<AssetService>
 
         Logger.LogInformation($"Normalization complete. Renamed: {renamedCount}, Skipped: {skippedCount}, Total: {renamedCount + skippedCount}");
     }
+    
+
+    public void SortCutsceneBGs(string ogPath, string assetPath)
+    {
+        var idList = Directory.GetDirectories(ogPath, "*cutscene_char*");
+        
+        Regex bgCheck = new Regex(@"^((cha)r?)?[0-9]{5,6}");
+
+        var bgFirstFilter = Directory.GetFiles(assetPath, "*.png", SearchOption.AllDirectories)
+            .Where(x => bgCheck.IsMatch(Path.GetFileNameWithoutExtension(x).ToLower()))
+            .ToList();
+        Logger.LogInformation("--------------------");
+        Logger.LogInformation(bgFirstFilter.Count.ToString());
+        foreach (var bg in bgFirstFilter)
+        {
+            string expectedSubfolder = $"cutscene_char{int.Parse(Regex.Match(Path.GetFileNameWithoutExtension(bg), @"\d+").Value).ToString("D6")}";
+            if (Directory.Exists(Path.Combine(ogPath, expectedSubfolder)))
+            {
+                Logger.LogInformation($"Move {bg} -> {Path.Combine(ogPath, expectedSubfolder)}");
+                File.Copy(bg, Path.Combine(ogPath, expectedSubfolder, Path.GetFileName(bg)), true);
+            }
+        }
+    }
+
+    
 }

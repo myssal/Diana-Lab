@@ -17,12 +17,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="config.txt">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="config_template.txt">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
       <None Update="data\atlas.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
@@ -31,6 +25,9 @@
       </None>
       <None Update="data\delete.txt">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="config.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
     </ItemGroup>
 

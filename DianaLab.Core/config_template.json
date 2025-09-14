@@ -1,0 +1,15 @@
+{
+  "Input": "",
+  "Temp": "",
+  "Output": "",
+  "StartDate": "2025-05-01",
+  "EndDate": "2025-05-01",
+  "AssetStudio": "",
+  "UnityVersion": "2022.3.22f1",
+  "IsCopyToTemp": false,
+  "IsWriteUpdateFilesList": true,
+  "Types": [
+    "Texture2D",
+    "TextAsset"
+  ]
+}

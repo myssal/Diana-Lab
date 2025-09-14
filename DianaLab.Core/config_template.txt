@@ -1,7 +1,0 @@
-input: 
-temp:
-output:
-date: 
-asset-studio: 
-fallback_date: 
-check_option: 
