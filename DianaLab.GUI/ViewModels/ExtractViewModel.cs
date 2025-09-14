@@ -331,6 +331,18 @@ namespace DianaLab.GUI.ViewModels
                         SelectedFilterType = "TextAsset";
                     }
                 }
+                
+                // Job section
+                ExtractAsset = m_Config.ExtractAsset;
+                DeleteRedundant = m_Config.DeleteRedundant;
+                RenameSpine = m_Config.RenameSpine;
+                SortAsset = m_Config.SortAsset;
+                SortSpine = m_Config.SortSpine;
+                OrganizeSpine = m_Config.OrganizeSpine;
+                ResizeSpineTextures = m_Config.ResizeSpineTextures;
+                SortAtlas = m_Config.SortAtlas;
+                NormalizeCostumeName = m_Config.NormalizeCostumeName;
+                
             }
         }
 
