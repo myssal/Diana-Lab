@@ -15,17 +15,6 @@ namespace DianaLab.GUI.ViewModels
     public class ExtractViewModel : BaseViewModel
     {
         private Config m_Config;
-        
-        private bool m_CopyToTempFolder;
-        public bool CopyToTempFolder
-        {
-            get => m_CopyToTempFolder;
-            set
-            {
-                m_CopyToTempFolder = value;
-                OnPropertyChanged();
-            }
-        }
 
         private string m_TempLocation;
         public string TempLocation
@@ -236,57 +225,57 @@ namespace DianaLab.GUI.ViewModels
             }
         }
 
-        private bool m_BundlesLocationInvalid;
-        public bool BundlesLocationInvalid
+        private string m_BundlesLocationError;
+        public string BundlesLocationError
         {
-            get => m_BundlesLocationInvalid;
+            get => m_BundlesLocationError;
             set
             {
-                m_BundlesLocationInvalid = value;
+                m_BundlesLocationError = value;
                 OnPropertyChanged();
             }
         }
 
-        private bool m_OutputLocationInvalid;
-        public bool OutputLocationInvalid
+        private string m_OutputLocationError;
+        public string OutputLocationError
         {
-            get => m_OutputLocationInvalid;
+            get => m_OutputLocationError;
             set
             {
-                m_OutputLocationInvalid = value;
+                m_OutputLocationError = value;
                 OnPropertyChanged();
             }
         }
 
-        private bool m_TempLocationInvalid;
-        public bool TempLocationInvalid
+        private string m_TempLocationError;
+        public string TempLocationError
         {
-            get => m_TempLocationInvalid;
+            get => m_TempLocationError;
             set
             {
-                m_TempLocationInvalid = value;
+                m_TempLocationError = value;
                 OnPropertyChanged();
             }
         }
 
-        private bool m_CliLocationInvalid;
-        public bool CliLocationInvalid
+        private string m_CliLocationError;
+        public string CliLocationError
         {
-            get => m_CliLocationInvalid;
+            get => m_CliLocationError;
             set
             {
-                m_CliLocationInvalid = value;
+                m_CliLocationError = value;
                 OnPropertyChanged();
             }
         }
 
-        private bool m_EndDateInvalid;
-        public bool EndDateInvalid
+        private string m_EndDateError;
+        public string EndDateError
         {
-            get => m_EndDateInvalid;
+            get => m_EndDateError;
             set
             {
-                m_EndDateInvalid = value;
+                m_EndDateError = value;
                 OnPropertyChanged();
             }
         }
@@ -295,8 +284,8 @@ namespace DianaLab.GUI.ViewModels
 
         public ExtractViewModel()
         {
-            FilterTypes = new ObservableCollection<string> { "Texture2D", "TextAsset", "Both (Texture2D & TextAsset)" };
-            SelectedFilterType = "Both (Texture2D & TextAsset)";
+            FilterTypes = new ObservableCollection<string> { "Texture2D", "TextAsset", "Both" };
+            SelectedFilterType = "Texture2D";
             StartDate = DateTime.Now;
             EndDate = DateTime.Now;
 
@@ -322,7 +311,7 @@ namespace DianaLab.GUI.ViewModels
                 }
                 CliLocation = m_Config.AssetStudio;
                 UnityVersion = m_Config.UnityVersion;
-                CopyToTempFolder = m_Config.IsCopyToTemp;
+                CopyBundles = m_Config.IsCopyToTemp;
 
                 if (m_Config.Types != null)
                 {
@@ -331,7 +320,7 @@ namespace DianaLab.GUI.ViewModels
 
                     if (hasTexture2D && hasTextAsset)
                     {
-                        SelectedFilterType = "Both (Texture2D & TextAsset)";
+                        SelectedFilterType = "Both";
                     }
                     else if (hasTexture2D)
                     {
@@ -355,25 +344,61 @@ namespace DianaLab.GUI.ViewModels
 
         public bool InputValiate()
         {
-            BundlesLocationInvalid = !Directory.Exists(BundlesLocation);
-            OutputLocationInvalid = !Directory.Exists(OutputLocation);
-            CliLocationInvalid = !File.Exists(CliLocation);
-            EndDateInvalid = StartDate > EndDate;
+            BundlesLocationError = null;
+            OutputLocationError = null;
+            TempLocationError = null;
+            CliLocationError = null;
+            EndDateError = null;
 
-            if (CopyToTempFolder)
+            if (string.IsNullOrEmpty(BundlesLocation))
             {
-                TempLocationInvalid = !Directory.Exists(TempLocation);
+                BundlesLocationError = "Bundles location cannot be empty.";
             }
-            else
+            else if (!Directory.Exists(BundlesLocation))
             {
-                TempLocationInvalid = false;
+                BundlesLocationError = "Folder does not exist.";
             }
 
-            if (BundlesLocationInvalid || OutputLocationInvalid || CliLocationInvalid || (CopyToTempFolder && TempLocationInvalid) || EndDateInvalid)
+            if (string.IsNullOrEmpty(OutputLocation))
             {
-                return false;
+                OutputLocationError = "Output location cannot be empty.";
             }
-            return true;
+            else if (!Directory.Exists(OutputLocation))
+            {
+                OutputLocationError = "Folder does not exist.";
+            }
+
+            if (string.IsNullOrEmpty(CliLocation))
+            {
+                CliLocationError = "CLI location cannot be empty.";
+            }
+            else if (!File.Exists(CliLocation))
+            {
+                CliLocationError = "File does not exist.";
+            }
+
+            if (StartDate > EndDate)
+            {
+                EndDateError = "End date cannot be earlier than start date.";
+            }
+
+            if (CopyBundles)
+            {
+                if (string.IsNullOrEmpty(TempLocation))
+                {
+                    TempLocationError = "Temp location cannot be empty.";
+                }
+                else if (!Directory.Exists(TempLocation))
+                {
+                    TempLocationError = "Folder does not exist.";
+                }
+            }
+
+            return string.IsNullOrEmpty(BundlesLocationError) &&
+                   string.IsNullOrEmpty(OutputLocationError) &&
+                   string.IsNullOrEmpty(TempLocationError) &&
+                   string.IsNullOrEmpty(CliLocationError) &&
+                   string.IsNullOrEmpty(EndDateError);
         }
     }
 }

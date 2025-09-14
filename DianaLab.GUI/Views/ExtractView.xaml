@@ -10,6 +10,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <converters:BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter" />
+        <converters:StringNullOrEmptyToVisibilityConverter x:Key="stringNullOrEmptyToVisibilityConverter" />
     </UserControl.Resources>
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
         <Grid>
@@ -23,7 +24,6 @@
             <GroupBox Header="Asset Bundle" Grid.Row="0" Margin="5">
                 <Grid Margin="5">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
@@ -44,7 +44,7 @@
                                     <TextBox Grid.Column="0" Margin="0,0,5,0" Text="{Binding BundlesLocation}"/>
                                     <Button Grid.Column="1" Width="33" Content="..." />
                                 </Grid>
-                                <TextBlock Grid.Row="1" Text="Invalid folder path" Foreground="Red" FontSize="10" Visibility="{Binding BundlesLocationInvalid, Converter={StaticResource booleanToVisibilityConverter}}"/>
+                                <TextBlock Grid.Row="1" Text="{Binding BundlesLocationError}" Foreground="Red" FontSize="10" Visibility="{Binding BundlesLocationError, Converter={StaticResource stringNullOrEmptyToVisibilityConverter}}"/>
                             </Grid>
                         </controls:LabeledControl.InputContent>
                     </controls:LabeledControl>
@@ -64,14 +64,12 @@
                                     <TextBox Grid.Column="0" Margin="0,0,5,0" Text="{Binding OutputLocation}"/>
                                     <Button Grid.Column="1" Width="33" Content="..." />
                                 </Grid>
-                                <TextBlock Grid.Row="1" Text="Invalid folder path" Foreground="Red" FontSize="10" Visibility="{Binding OutputLocationInvalid, Converter={StaticResource booleanToVisibilityConverter}}"/>
+                                <TextBlock Grid.Row="1" Text="{Binding OutputLocationError}" Foreground="Red" FontSize="10" Visibility="{Binding OutputLocationError, Converter={StaticResource stringNullOrEmptyToVisibilityConverter}}"/>
                             </Grid>
                         </controls:LabeledControl.InputContent>
                     </controls:LabeledControl>
-                    
-                    <CheckBox Grid.Row="2" Content="Copy to temp folder" IsChecked="{Binding CopyToTempFolder}" Margin="5,5,0,0"/>
 
-                    <controls:LabeledControl Label="Temp location:" LabelWidth="130" Grid.Row="3" Visibility="{Binding CopyToTempFolder, Converter={StaticResource booleanToVisibilityConverter}}">
+                    <controls:LabeledControl Label="Temp location:" LabelWidth="130" Grid.Row="2" Visibility="{Binding CopyBundles, Converter={StaticResource booleanToVisibilityConverter}}">
                         <controls:LabeledControl.InputContent>
                             <Grid>
                                 <Grid.RowDefinitions>
@@ -86,12 +84,12 @@
                                     <TextBox Grid.Column="0" Margin="0,0,5,0" Text="{Binding TempLocation}"/>
                                     <Button Grid.Column="1" Width="33" Content="..." />
                                 </Grid>
-                                <TextBlock Grid.Row="1" Text="Invalid folder path" Foreground="Red" FontSize="10" Visibility="{Binding TempLocationInvalid, Converter={StaticResource booleanToVisibilityConverter}}"/>
+                                <TextBlock Grid.Row="1" Text="{Binding TempLocationError}" Foreground="Red" FontSize="10" Visibility="{Binding TempLocationError, Converter={StaticResource stringNullOrEmptyToVisibilityConverter}}"/>
                             </Grid>
                         </controls:LabeledControl.InputContent>
                     </controls:LabeledControl>
                     
-                    <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="0,5,0,0">
+                    <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,5,0,0">
                         <controls:LabeledControl Label="Start Date:" LabelWidth="130">
                             <controls:LabeledControl.InputContent>
                                 <DatePicker Width="120" SelectedDate="{Binding StartDate, Mode=TwoWay}"/>
@@ -102,9 +100,8 @@
                                 <StackPanel>
                                     <DatePicker Grid.Row="0" Width="120" SelectedDate="{Binding EndDate, 
                                     Mode=TwoWay}" HorizontalAlignment="Left"/>
-                                    <TextBlock Grid.Row="1" Text="End date cannot be earlier than start date" Foreground="Red" 
-                                               FontSize="10" Visibility="{Binding EndDateInvalid, Converter={StaticResource 
-                                    booleanToVisibilityConverter}}"/>
+                                    <TextBlock Grid.Row="1" Text="{Binding EndDateError}" Foreground="Red" 
+                                               FontSize="10" Visibility="{Binding EndDateError, Converter={StaticResource stringNullOrEmptyToVisibilityConverter}}"/>
                                 </StackPanel>
                             </controls:LabeledControl.InputContent>
                         </controls:LabeledControl>
@@ -135,7 +132,7 @@
                                     <TextBox Grid.Column="0" Margin="0,0,5,0" Text="{Binding CliLocation}"/>
                                     <Button Grid.Column="1" Width="33" Content="..."/>
                                 </Grid>
-                                <TextBlock Grid.Row="1" Text="Invalid file path" Foreground="Red" FontSize="10" Visibility="{Binding CliLocationInvalid, Converter={StaticResource booleanToVisibilityConverter}}"/>
+                                <TextBlock Grid.Row="1" Text="{Binding CliLocationError}" Foreground="Red" FontSize="10" Visibility="{Binding CliLocationError, Converter={StaticResource stringNullOrEmptyToVisibilityConverter}}"/>
                             </Grid>
                         </controls:LabeledControl.InputContent>
                     </controls:LabeledControl>
