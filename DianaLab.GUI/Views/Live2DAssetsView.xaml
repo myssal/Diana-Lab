@@ -12,6 +12,12 @@
         <converters:TagToBrushConverter x:Key="TagToBrushConverter"/>
         <Style TargetType="DataGridCell">
             <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="BorderThickness" Value="0"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
     </UserControl.Resources>
     <Grid>
@@ -31,21 +37,24 @@
             <Button Grid.Column="1" Content="Add.." Margin="5,5" Click="AddButton_Click"/>
             <Grid Grid.Column="2">
                 <TextBox x:Name="SearchTextBox" Width="200" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Margin="0,5" FontSize="13"/>
-                <Popup IsOpen="{Binding IsSuggestionsOpen}" StaysOpen="False" Placement="Bottom" PlacementTarget="{Binding ElementName=SearchTextBox}">
-                    <ListBox ItemsSource="{Binding SearchSuggestions}"
-                             Width="200">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding}" FontSize="13">
-                                    <TextBlock.InputBindings>
-                                        <MouseBinding MouseAction="LeftClick" 
-                                                      Command="{Binding DataContext.SelectSuggestionCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                      CommandParameter="{Binding}"/>
-                                    </TextBlock.InputBindings>
-                                </TextBlock>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                <Popup IsOpen="{Binding IsSuggestionsOpen}" StaysOpen="False" Placement="Bottom" PlacementTarget="{Binding ElementName=SearchTextBox}" AllowsTransparency="True">
+                    <Border CornerRadius="5" Background="White" BorderBrush="Gray" BorderThickness="1">
+                        <ListBox ItemsSource="{Binding SearchSuggestions}"
+                                 Width="200"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" FontSize="13" TextTrimming="CharacterEllipsis">
+                                        <TextBlock.InputBindings>
+                                            <MouseBinding MouseAction="LeftClick" 
+                                                          Command="{Binding DataContext.SelectSuggestionCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                          CommandParameter="{Binding}"/>
+                                        </TextBlock.InputBindings>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Border>
                 </Popup>
             </Grid>
             <Button Grid.Column="3" Content="Search" Margin="5,5" Command="{Binding SearchCommand}"/>

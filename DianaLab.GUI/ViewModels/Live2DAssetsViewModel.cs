@@ -21,6 +21,7 @@ namespace DianaLab.GUI.ViewModels
             }
         }
 
+        private bool _shouldUpdateSuggestions = true;
         private string _searchText;
         public string SearchText
         {
@@ -31,7 +32,10 @@ namespace DianaLab.GUI.ViewModels
                 {
                     _searchText = value;
                     OnPropertyChanged();
-                    UpdateSuggestions();
+                    if (_shouldUpdateSuggestions)
+                    {
+                        UpdateSuggestions();
+                    }
                 }
             }
         }
@@ -131,8 +135,10 @@ namespace DianaLab.GUI.ViewModels
         {
             if (parameter is string suggestion)
             {
-                _searchText = suggestion; // Set backing field to avoid re-triggering suggestions
-                OnPropertyChanged(nameof(SearchText));
+                _shouldUpdateSuggestions = false;
+                SearchText = suggestion;
+                _shouldUpdateSuggestions = true;
+
                 IsSuggestionsOpen = false;
                 PerformSearch(null);
             }
