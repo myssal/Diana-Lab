@@ -30,6 +30,7 @@
                     <Setter Property="BorderThickness" Value="0,0,1,1"/>
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                     <Setter Property="FontWeight" Value="SemiBold"/>
+                    <Setter Property="FontSize" Value="15"/>
                 </Style>
             </Setter.Value>
         </Setter>

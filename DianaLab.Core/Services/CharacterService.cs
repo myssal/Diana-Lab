@@ -82,6 +82,11 @@ public class CharacterService
         return JsonSerializer.Deserialize<List<CharacterInfo>>(json, options) ?? new List<CharacterInfo>();
     }
 
+    public static List<CharacterInfo> LoadCharacters(string filePath)
+    {
+        return LoadJson(filePath);
+    }
+
     private static void SaveJson(string filePath, List<CharacterInfo> characters)
     {
         var saveOptions = new JsonSerializerOptions
@@ -329,6 +334,88 @@ public class CharacterInfo
     public PrestigeSkinInfo? prestigeSkin { get; set; }
 }
 
+public static class L2DManager
+{
+    public static List<L2DInfo> GetL2DAssets(List<CharacterInfo> characters)
+    {
+        var l2dAssets = new List<L2DInfo>();
+
+        foreach (var character in characters)
+        {
+            if (character.costumes != null)
+            {
+                foreach (var costume in character.costumes)
+                {
+                    if (!string.IsNullOrEmpty(costume.spine))
+                    {
+                        l2dAssets.Add(new L2DInfo
+                        {
+                            id = costume.costumeId,
+                            name = $"{character.charName}:{costume.costumeName}",
+                            l2d = costume.spine,
+                            l2dTags = new List<L2DTag> { L2DTag.CostumeIdle, L2DTag.Costume },
+                            releaseDate = costume.releaseDate
+                        });
+                    }
+
+                    if (!string.IsNullOrEmpty(costume.cutscene))
+                    {
+                        l2dAssets.Add(new L2DInfo
+                        {
+                            id = costume.costumeId,
+                            name = $"{character.charName}:{costume.costumeName}",
+                            l2d = costume.cutscene,
+                            l2dTags = new List<L2DTag> { L2DTag.CostumeCutscene, L2DTag.Costume },
+                            releaseDate = costume.releaseDate
+                        });
+                    }
+                }
+            }
+
+            if (character.guest != null)
+            {
+                l2dAssets.Add(new L2DInfo
+                {
+                    id = character.charId,
+                    name = $"Special guest: {character.charName}",
+                    l2d = character.guest.interact,
+                    l2dTags = new List<L2DTag> { L2DTag.Dating },
+                    releaseDate = character.guest.releaseDate
+                });
+            }
+
+            if (character.prestigeSkin != null)
+            {
+                if (!string.IsNullOrEmpty(character.prestigeSkin.spine))
+                {
+                    l2dAssets.Add(new L2DInfo
+                    {
+                        id = character.prestigeSkin.spine.Replace("char", ""),
+                        name = $"{character.charName}:{character.prestigeSkin.prestigeSkinName}",
+                        l2d = character.prestigeSkin.spine,
+                        l2dTags = new List<L2DTag> { L2DTag.PrestigeIdle, L2DTag.PrestigeSkin },
+                        releaseDate = character.prestigeSkin.releaseDate
+                    });
+                }
+
+                if (!string.IsNullOrEmpty(character.prestigeSkin.interact))
+                {
+                    l2dAssets.Add(new L2DInfo
+                    {
+                        id = character.prestigeSkin.spine?.Replace("char", ""),
+                        name = $"{character.charName}:{character.prestigeSkin.prestigeSkinName}",
+                        l2d = character.prestigeSkin.interact,
+                        l2dTags = new List<L2DTag> { L2DTag.PrestigeInteract, L2DTag.PrestigeSkin },
+                        releaseDate = character.prestigeSkin.releaseDate
+                    });
+                }
+            }
+        }
+
+        return l2dAssets;
+    }
+}
+
 public class CostumeInfo
 {
     public string? costumeId { get; set; }
@@ -350,4 +437,30 @@ public class PrestigeSkinInfo
     public string? releaseDate { get; set; }
     public string? spine { get; set; }
     public string? interact { get; set; }
+}
+
+public class L2DInfo
+{
+    public string id { get; set; }
+    public string name { get; set; }
+    public string l2d { get; set; }
+    public List<L2DTag> l2dTags { get; set; }
+    public string releaseDate { get; set; }
+
+    public L2DInfo()
+    {
+        
+    }
+}
+
+public enum L2DTag
+{
+    PrestigeInteract,
+    PrestigeSkin,
+    Dating,
+    PrestigeIdle,
+    Costume,
+    CostumeIdle,
+    CostumeCutscene,
+    SpecialIllust
 }
