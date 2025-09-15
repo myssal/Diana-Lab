@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -6,6 +7,7 @@ using System.Windows;
 using System.Windows.Input;
 using DianaLab.Core.Model;
 using DianaLab.Core.Services;
+using DianaLab.GUI.Logging;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using System.Linq;
@@ -295,7 +297,7 @@ namespace DianaLab.GUI.ViewModels
 
         private void Preload()
         {
-            m_Config = AssetService.GetConfigureData(new NullLogger<ExtractViewModel>());
+            m_Config = AssetService.GetConfigureData(Log.CreateLogger<ExtractViewModel>());
             if (m_Config != null)
             {
                 BundlesLocation = m_Config.Input;
@@ -331,6 +333,16 @@ namespace DianaLab.GUI.ViewModels
                         SelectedFilterType = "TextAsset";
                     }
                 }
+                
+                ExtractAsset = m_Config.ExtractAsset;
+                DeleteRedundant = m_Config.DeleteRedundant;
+                RenameSpine = m_Config.RenameSpine;
+                SortAsset = m_Config.SortAsset;
+                SortSpine = m_Config.SortSpine;
+                OrganizeSpine = m_Config.OrganizeSpine;
+                ResizeSpineTextures = m_Config.ResizeSpineTextures;
+                SortAtlas = m_Config.SortAtlas;
+                NormalizeCostumeName = m_Config.NormalizeCostumeName;
             }
         }
 
@@ -374,7 +386,7 @@ namespace DianaLab.GUI.ViewModels
             if (InputValiate())
             {
                 UpdateConfig();
-                var logger = new NullLogger<AssetService>();
+                var logger = Log.CreateLogger<AssetService>();
                 var assetService = new AssetService(logger, m_Config);
                 await assetService.ProcessAsset();
             }

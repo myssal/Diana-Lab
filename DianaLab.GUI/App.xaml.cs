@@ -1,10 +1,13 @@
 ﻿using System.Windows;
 using System.Windows.Threading;
+using DianaLab.GUI.Logging;
+using Microsoft.Extensions.Logging;
+
 namespace DianaLab.GUI;
 
-/// <summary>
-/// Interaction logic for App.xaml
-/// </summary>
+// <summary>
+// Interaction logic for App.xaml
+// </summary>
 public partial class App : Application
 {
     private DispatcherTimer _consoleCheckTimer;
@@ -12,6 +15,7 @@ public partial class App : Application
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+        Log.LoggerFactory = LoggerFactory.Create(builder => builder.AddDebug());
         Utils.ConsoleHelper.Show();
         Console.WriteLine($"Diana's Lab");
 

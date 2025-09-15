@@ -43,9 +43,7 @@ public class AssetService : LoggedService<AssetService>
     
     public async Task ProcessAsset()
     {
-        string logOutput = Path.Combine(config.Output, "sort" ,"process.log");
-        await using (File.Create(logOutput)) { }
-
+        
         if (updatedFiles.Count > 0)
         {
             var totalSw = Stopwatch.StartNew();
@@ -53,9 +51,12 @@ public class AssetService : LoggedService<AssetService>
 
             Helper.CleanDirectory(config.Output);
             sw.Stop();
+            string logOutput = Path.Combine(config.Output, "sort" ,"process.log");
+            Directory.CreateDirectory(Path.Combine(config.Output, "sort"));
+            await using (File.Create(logOutput)) { }
             Helper.LogAppend($"- Clean output dir in: {sw.ElapsedMilliseconds * 0.001:F3}s.", logOutput);
 
-            if (config.IsCopyToTemp)
+            if (config.IsCopyToTemp)    
             {
                 sw.Restart();
                 Helper.CleanDirectory(config.Temp);
@@ -158,6 +159,8 @@ public class AssetService : LoggedService<AssetService>
         else
         {
             Logger.LogInformation("No updated files to process.");
+            string logOutput = Path.Combine(config.Output, "process.log");
+            await using (File.Create(logOutput)) { }
             Helper.LogAppend("- No updated files found. Nothing to process.", logOutput);
         }
     }
