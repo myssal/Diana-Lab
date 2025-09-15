@@ -19,6 +19,33 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        <Style TargetType="{x:Type DataGridColumnHeader}">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="ContentTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{Binding}" Grid.Column="0" />
+                            <Image x:Name="SortIcon" Width="12" Height="12" Grid.Column="1" Margin="5,0,0,0" Visibility="Collapsed" RenderOptions.BitmapScalingMode="HighQuality"/>
+                        </Grid>
+                        <DataTemplate.Triggers>
+                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGridColumnHeader}}, Path=SortDirection}" Value="Ascending">
+                                <Setter TargetName="SortIcon" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="SortIcon" Property="Source" Value="F:/FullSetC/Tool/Game/Brown Dust/ExtractAsset/DianaLab.GUI/Resources/Icons/up.png"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGridColumnHeader}}, Path=SortDirection}" Value="Descending">
+                                <Setter TargetName="SortIcon" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="SortIcon" Property="Source" Value="F:/FullSetC/Tool/Game/Brown Dust/ExtractAsset/DianaLab.GUI/Resources/Icons/down.png"/>
+                            </DataTrigger>
+                        </DataTemplate.Triggers>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -61,12 +88,12 @@
         </Grid>
         
         <Grid Grid.Row="1">
-            <DataGrid Margin="5,0,5,5" AutoGenerateColumns="False" ItemsSource="{Binding L2DAssets}" IsReadOnly="True">
+            <DataGrid Margin="5,0,5,5" AutoGenerateColumns="False" ItemsSource="{Binding L2DAssets}" IsReadOnly="True" CanUserSortColumns="True">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="ID" Binding="{Binding id}" Width="*"/>
-                    <DataGridTextColumn Header="Name" Binding="{Binding name}" Width="5*"/>
-                    <DataGridTextColumn Header="L2D" Binding="{Binding l2d}" Width="3*"/>
-                    <DataGridTemplateColumn Header="Tag" Width="3*">
+                    <DataGridTextColumn Header="ID" Binding="{Binding id}" Width="*" SortMemberPath="id"/>
+                    <DataGridTextColumn Header="Name" Binding="{Binding name}" Width="5*" SortMemberPath="name"/>
+                    <DataGridTextColumn Header="L2D" Binding="{Binding l2d}" Width="3*" SortMemberPath="l2d"/>
+                    <DataGridTemplateColumn Header="Tag" Width="3*" CanUserSort="False">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <ItemsControl ItemsSource="{Binding l2dTags}">
@@ -86,7 +113,7 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Release Date" Binding="{Binding releaseDate}" Width="2*"/>
+                    <DataGridTextColumn Header="Release Date" Binding="{Binding releaseDate}" Width="2*" SortMemberPath="releaseDate"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

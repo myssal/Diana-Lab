@@ -1,6 +1,8 @@
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Windows.Data;
 using System.Windows.Input;
 using DianaLab.Core.Services;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -10,16 +12,7 @@ namespace DianaLab.GUI.ViewModels
     public class Live2DAssetsViewModel : BaseViewModel
     {
         private readonly ObservableCollection<L2DInfo> _allL2DAssets;
-        private ObservableCollection<L2DInfo> _l2dAssets;
-        public ObservableCollection<L2DInfo> L2DAssets
-        {
-            get => _l2dAssets;
-            set
-            {
-                _l2dAssets = value;
-                OnPropertyChanged();
-            }
-        }
+        public ICollectionView L2DAssets { get; }
 
         private bool _shouldUpdateSuggestions = true;
         private string _searchText;
@@ -36,6 +29,7 @@ namespace DianaLab.GUI.ViewModels
                     {
                         UpdateSuggestions();
                     }
+                    PerformSearch(null);
                 }
             }
         }
@@ -59,7 +53,7 @@ namespace DianaLab.GUI.ViewModels
         public Live2DAssetsViewModel()
         {
             _allL2DAssets = new ObservableCollection<L2DInfo>();
-            _l2dAssets = new ObservableCollection<L2DInfo>();
+            L2DAssets = new ListCollectionView(_allL2DAssets);
             SearchCommand = new RelayCommand(PerformSearch);
             SelectSuggestionCommand = new RelayCommand(SelectSuggestion);
             LoadAssets();
@@ -83,21 +77,25 @@ namespace DianaLab.GUI.ViewModels
         }
 
         private void PerformSearch(object parameter)
-        { 
+        {
             if (string.IsNullOrWhiteSpace(SearchText))
             {
-                L2DAssets = new ObservableCollection<L2DInfo>(_allL2DAssets);
+                L2DAssets.Filter = null;
             }
             else
             {
                 var searchTextLower = SearchText.ToLower();
-                var filteredAssets = _allL2DAssets.Where(asset =>
-                    (asset.id?.ToLower().Contains(searchTextLower) ?? false) ||
-                    (asset.name?.ToLower().Contains(searchTextLower) ?? false) ||
-                    (asset.l2d?.ToLower().Contains(searchTextLower) ?? false) ||
-                    (asset.l2dTags?.Any(tag => tag.ToString().ToLower().Contains(searchTextLower)) ?? false)
-                );
-                L2DAssets = new ObservableCollection<L2DInfo>(filteredAssets);
+                L2DAssets.Filter = item =>
+                {
+                    if (item is L2DInfo asset)
+                    {
+                        return (asset.id?.ToLower().Contains(searchTextLower) ?? false) ||
+                               (asset.name?.ToLower().Contains(searchTextLower) ?? false) ||
+                               (asset.l2d?.ToLower().Contains(searchTextLower) ?? false) ||
+                               (asset.l2dTags?.Any(tag => tag.ToString().ToLower().Contains(searchTextLower)) ?? false);
+                    }
+                    return false;
+                };
             }
         }
 
@@ -140,7 +138,6 @@ namespace DianaLab.GUI.ViewModels
                 _shouldUpdateSuggestions = true;
 
                 IsSuggestionsOpen = false;
-                PerformSearch(null);
             }
         }
     }

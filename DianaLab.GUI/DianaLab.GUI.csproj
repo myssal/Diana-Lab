@@ -12,4 +12,11 @@
       <ProjectReference Include="..\DianaLab.Core\DianaLab.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Resources\Icons\down.png" />
+      <Resource Include="Resources\Icons\down.png" />
+      <None Remove="Resources\Icons\up.png" />
+      <Resource Include="Resources\Icons\up.png" />
+    </ItemGroup>
+
 </Project>
