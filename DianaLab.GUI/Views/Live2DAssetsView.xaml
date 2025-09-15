@@ -10,6 +10,9 @@
     <UserControl.Resources>
         <converters:TagListToStringConverter x:Key="TagListToStringConverter"/>
         <converters:TagToBrushConverter x:Key="TagToBrushConverter"/>
+        <Style TargetType="DataGridCell">
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -31,7 +34,7 @@
         </Grid>
         
         <Grid Grid.Row="1">
-            <DataGrid Margin="5,0,5,5" AutoGenerateColumns="False" ItemsSource="{Binding L2DAssets}" IsReadOnly="True" FontSize="16">
+            <DataGrid Margin="5,0,5,5" AutoGenerateColumns="False" ItemsSource="{Binding L2DAssets}" IsReadOnly="True">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding id}" Width="*"/>
                     <DataGridTextColumn Header="Name" Binding="{Binding name}" Width="5*"/>
