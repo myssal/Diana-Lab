@@ -9,6 +9,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <converters:TagListToStringConverter x:Key="TagListToStringConverter"/>
+        <converters:TagToBrushConverter x:Key="TagToBrushConverter"/>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -30,12 +31,31 @@
         </Grid>
         
         <Grid Grid.Row="1">
-            <DataGrid Margin="5,0,5,5" AutoGenerateColumns="False" ItemsSource="{Binding L2DAssets}">
+            <DataGrid Margin="5,0,5,5" AutoGenerateColumns="False" ItemsSource="{Binding L2DAssets}" IsReadOnly="True" FontSize="16">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding id}" Width="*"/>
-                    <DataGridTextColumn Header="Name" Binding="{Binding name}" Width="4*"/>
+                    <DataGridTextColumn Header="Name" Binding="{Binding name}" Width="5*"/>
                     <DataGridTextColumn Header="L2D" Binding="{Binding l2d}" Width="3*"/>
-                    <DataGridTextColumn Header="Tag" Binding="{Binding l2dTags, Converter={StaticResource TagListToStringConverter}}" Width="2*"/>
+                    <DataGridTemplateColumn Header="Tag" Width="3*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ItemsControl ItemsSource="{Binding l2dTags}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border CornerRadius="5" Margin="2" Padding="5,2" Background="{Binding Converter={StaticResource TagToBrushConverter}}">
+                                                <TextBlock Text="{Binding}" Foreground="Black"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                     <DataGridTextColumn Header="Release Date" Binding="{Binding releaseDate}" Width="2*"/>
                 </DataGrid.Columns>
             </DataGrid>

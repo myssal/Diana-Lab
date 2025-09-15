@@ -353,7 +353,7 @@ public static class L2DManager
                             id = costume.costumeId,
                             name = $"{character.charName}:{costume.costumeName}",
                             l2d = costume.spine,
-                            l2dTags = new List<L2DTag> { L2DTag.CostumeIdle, L2DTag.Costume },
+                            l2dTags = new List<L2DTag> { L2DTag.Costume_Idle, L2DTag.Costume },
                             releaseDate = costume.releaseDate
                         });
                     }
@@ -365,7 +365,7 @@ public static class L2DManager
                             id = costume.costumeId,
                             name = $"{character.charName}:{costume.costumeName}",
                             l2d = costume.cutscene,
-                            l2dTags = new List<L2DTag> { L2DTag.CostumeCutscene, L2DTag.Costume },
+                            l2dTags = new List<L2DTag> { L2DTag.Costume_Cutscene, L2DTag.Costume },
                             releaseDate = costume.releaseDate
                         });
                     }
@@ -393,7 +393,7 @@ public static class L2DManager
                         id = character.prestigeSkin.spine.Replace("char", ""),
                         name = $"{character.charName}:{character.prestigeSkin.prestigeSkinName}",
                         l2d = character.prestigeSkin.spine,
-                        l2dTags = new List<L2DTag> { L2DTag.PrestigeIdle, L2DTag.PrestigeSkin },
+                        l2dTags = new List<L2DTag> { L2DTag.Prestige_Idle, L2DTag.Prestige_Skin },
                         releaseDate = character.prestigeSkin.releaseDate
                     });
                 }
@@ -405,7 +405,7 @@ public static class L2DManager
                         id = character.prestigeSkin.spine?.Replace("char", ""),
                         name = $"{character.charName}:{character.prestigeSkin.prestigeSkinName}",
                         l2d = character.prestigeSkin.interact,
-                        l2dTags = new List<L2DTag> { L2DTag.PrestigeInteract, L2DTag.PrestigeSkin },
+                        l2dTags = new List<L2DTag> { L2DTag.Prestige_Interact, L2DTag.Prestige_Skin },
                         releaseDate = character.prestigeSkin.releaseDate
                     });
                 }
@@ -446,21 +446,16 @@ public class L2DInfo
     public string l2d { get; set; }
     public List<L2DTag> l2dTags { get; set; }
     public string releaseDate { get; set; }
-
-    public L2DInfo()
-    {
-        
-    }
 }
 
 public enum L2DTag
 {
-    PrestigeInteract,
-    PrestigeSkin,
+    Prestige_Interact,
+    Prestige_Skin,
     Dating,
-    PrestigeIdle,
+    Prestige_Idle,
     Costume,
-    CostumeIdle,
-    CostumeCutscene,
+    Costume_Idle,
+    Costume_Cutscene,
     SpecialIllust
 }
