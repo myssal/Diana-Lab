@@ -24,10 +24,38 @@ namespace DianaLab.GUI.ViewModels
         public MainViewModel()
         {
             _currentView = new ExtractViewModel();
-            ExtractViewCommand = new RelayCommand(o => CurrentView = new ExtractViewModel());
-            Live2DAssetsViewCommand = new RelayCommand(o => CurrentView = new Live2DAssetsViewModel());
-            SettingsViewCommand = new RelayCommand(o => CurrentView = new SettingsViewModel());
-            AboutViewCommand = new RelayCommand(o => CurrentView = new AboutViewModel());
+            ExtractViewCommand = new RelayCommand(o =>
+            {
+                if (_currentView is ExtractViewModel extractViewModel)
+                {
+                    extractViewModel.SaveConfig();
+                }
+                CurrentView = new ExtractViewModel();
+            });
+            Live2DAssetsViewCommand = new RelayCommand(o =>
+            {
+                if (_currentView is ExtractViewModel extractViewModel)
+                {
+                    extractViewModel.SaveConfig();
+                }
+                CurrentView = new Live2DAssetsViewModel();
+            });
+            SettingsViewCommand = new RelayCommand(o =>
+            {
+                if (_currentView is ExtractViewModel extractViewModel)
+                {
+                    extractViewModel.SaveConfig();
+                }
+                CurrentView = new SettingsViewModel();
+            });
+            AboutViewCommand = new RelayCommand(o =>
+            {
+                if (_currentView is ExtractViewModel extractViewModel)
+                {
+                    extractViewModel.SaveConfig();
+                }
+                CurrentView = new AboutViewModel();
+            });
         }
     }
 }

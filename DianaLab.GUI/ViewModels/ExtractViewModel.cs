@@ -293,6 +293,7 @@ namespace DianaLab.GUI.ViewModels
 
             StartCommand = new RelayCommand(Start);
             Preload();
+            Application.Current.Exit += (sender, args) => SaveConfig();
         }
 
         private void Preload()
@@ -449,6 +450,12 @@ namespace DianaLab.GUI.ViewModels
                    string.IsNullOrEmpty(TempLocationError) &&
                    string.IsNullOrEmpty(CliLocationError) &&
                    string.IsNullOrEmpty(EndDateError);
+        }
+
+        public void SaveConfig()
+        {
+            UpdateConfig(); 
+            AssetService.SaveConfigureData(m_Config, Log.CreateLogger<ExtractViewModel>());
         }
     }
 }

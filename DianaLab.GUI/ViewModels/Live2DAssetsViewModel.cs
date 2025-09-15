@@ -1,11 +1,9 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Windows.Data;
 using System.Windows.Input;
 using DianaLab.Core.Services;
-using Microsoft.Extensions.Logging.Abstractions;
 
 namespace DianaLab.GUI.ViewModels
 {

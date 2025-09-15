@@ -211,6 +211,20 @@ public class AssetService : LoggedService<AssetService>
         return cfg;
     }
 
+    public static void SaveConfigureData(Config config, ILogger Logger)
+    {
+        try
+        {
+            var jsonString = JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(ConfigPath, jsonString);
+            Logger.LogInformation($"Config saved to {ConfigPath}");
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError($"Error saving config file: {ex.Message}");
+        }
+    }
+
     public async Task MoveFilesAsync(string inputPath, string destPath, int maxConcurrency = 4)
     {
         var directories = updatedFiles
