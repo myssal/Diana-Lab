@@ -1,14 +1,22 @@
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
+using DianaLab.Core.Model;
 using DianaLab.Core.Services;
+using DianaLab.Core.Utils;
+using Newtonsoft.Json;
 
 namespace DianaLab.GUI.ViewModels
 {
     public class Live2DAssetsViewModel : BaseViewModel
     {
+        private static bool _isCharInfoDownloaded;
+        private readonly bool _loadLocale;
         private readonly ObservableCollection<L2DInfo> _allL2DAssets;
         public ICollectionView L2DAssets { get; }
 
@@ -31,9 +39,10 @@ namespace DianaLab.GUI.ViewModels
                 }
             }
         }
-
+        
         public ICommand SearchCommand { get; }
         public ICommand SelectSuggestionCommand { get; }
+        public ICommand LoadL2DAssetsCommand { get; }
 
         public ObservableCollection<string> SearchSuggestions { get; } = new();
 
@@ -50,18 +59,70 @@ namespace DianaLab.GUI.ViewModels
 
         public Live2DAssetsViewModel()
         {
+            var config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"));
+            _loadLocale = config.LoadLocale;
+            
             _allL2DAssets = new ObservableCollection<L2DInfo>();
             L2DAssets = new ListCollectionView(_allL2DAssets);
             SearchCommand = new RelayCommand(PerformSearch);
             SelectSuggestionCommand = new RelayCommand(SelectSuggestion);
-            LoadAssets();
+            LoadL2DAssetsCommand = new RelayCommand(LoadL2DAssets);
+            LoadL2DAssets(null);
         }
 
-        private void LoadAssets()
+        public void LoadL2DAssets(object parameter)
         {
-            string characterJsonPath = @"F:\FullSetC\Game\Active\BrownDust\BrownDust2\CharInfo.json";
+            const string charInfoURL = "https://raw.githubusercontent.com/myssal/Brown-Dust-2-Asset/master/CharInfo.json";
+            string expectedInfoPath = Path.Combine(Path.GetTempPath(), "CharInfo.json");
+
+            if (_loadLocale)
+            {
+                var config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"));
+                var charInfoPath = config.CharInfoPath;
+
+                if (!string.IsNullOrEmpty(charInfoPath) && File.Exists(charInfoPath))
+                {
+                    Console.WriteLine($"Loading local metadata...");
+                    LoadAssets(charInfoPath);
+                }
+                else
+                {
+                    MessageBox.Show("Local CharInfo.json not found. Please check the path in config.json.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            else
+            {
+                if (_isCharInfoDownloaded)
+                {
+                    Console.WriteLine($"Loading previously downloaded metadata...");
+                    LoadAssets(expectedInfoPath);
+                    return;
+                }
+                
+                if (!Download.DownloadFromURL(charInfoURL, expectedInfoPath))
+                {
+                    if (File.Exists(expectedInfoPath))
+                    {
+                        Console.WriteLine($"Loading previously downloaded metadata...");
+                        LoadAssets(expectedInfoPath);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Failed to download CharInfo.json and no previous version was found in the temp folder.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+                else
+                {
+                    _isCharInfoDownloaded = true;
+                    LoadAssets(expectedInfoPath);
+                }
+            }
+        }
+        private void LoadAssets(string characterJsonPath)
+        {
             if (File.Exists(characterJsonPath))
             {
+                _allL2DAssets.Clear();
                 var characters = CharacterService.LoadCharacters(characterJsonPath);
                 var l2dAssets = L2DManager.GetL2DAssets(characters);
 

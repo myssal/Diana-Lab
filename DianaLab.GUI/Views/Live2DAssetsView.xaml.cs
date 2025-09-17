@@ -13,7 +13,7 @@ namespace DianaLab.GUI.Views
         private void AddButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             L2DMetadataEditorWindow editorWindow = new L2DMetadataEditorWindow();
-            editorWindow.ShowDialog(); // Use ShowDialog to make it a modal window
+            editorWindow.ShowDialog(); 
         }
     }
 }

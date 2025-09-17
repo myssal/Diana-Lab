@@ -13,6 +13,14 @@
         <Style TargetType="DataGridCell">
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="ContextMenu">
+                <Setter.Value>
+                    <ContextMenu>
+                        <MenuItem Header="Edit" Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, Path=DataContext.EditAssetCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.DataContext}"/>
+                        <MenuItem Header="Delete Entry" IsEnabled="False"/>
+                    </ContextMenu>
+                </Setter.Value>
+            </Setter>
             <Style.Triggers>
                 <Trigger Property="IsSelected" Value="True">
                     <Setter Property="BorderThickness" Value="0"/>
@@ -60,6 +68,9 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
+            
+            
+            
             
             <Button Grid.Column="1" Content="Add.." Margin="5,5" Click="AddButton_Click"/>
             <Grid Grid.Column="2">

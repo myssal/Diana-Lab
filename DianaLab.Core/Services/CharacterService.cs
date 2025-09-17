@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Linq;
 
 namespace DianaLab.Core.Services;
 
@@ -351,7 +352,7 @@ public static class L2DManager
                         l2dAssets.Add(new L2DInfo
                         {
                             id = costume.costumeId,
-                            name = $"{character.charName}:{costume.costumeName}",
+                            name = $"{character.charName}: {costume.costumeName}",
                             l2d = costume.spine,
                             l2dTags = new List<L2DTag> { L2DTag.Costume_Idle, L2DTag.Costume },
                             releaseDate = costume.releaseDate
@@ -363,7 +364,7 @@ public static class L2DManager
                         l2dAssets.Add(new L2DInfo
                         {
                             id = costume.costumeId,
-                            name = $"{character.charName}:{costume.costumeName}",
+                            name = $"{character.charName}: {costume.costumeName}",
                             l2d = costume.cutscene,
                             l2dTags = new List<L2DTag> { L2DTag.Costume_Cutscene, L2DTag.Costume },
                             releaseDate = costume.releaseDate
@@ -391,7 +392,7 @@ public static class L2DManager
                     l2dAssets.Add(new L2DInfo
                     {
                         id = character.prestigeSkin.spine.Replace("char", ""),
-                        name = $"{character.charName}:{character.prestigeSkin.prestigeSkinName}",
+                        name = $"{character.charName}: {character.prestigeSkin.prestigeSkinName}",
                         l2d = character.prestigeSkin.spine,
                         l2dTags = new List<L2DTag> { L2DTag.Prestige_Idle, L2DTag.Prestige_Skin },
                         releaseDate = character.prestigeSkin.releaseDate
@@ -403,7 +404,7 @@ public static class L2DManager
                     l2dAssets.Add(new L2DInfo
                     {
                         id = character.prestigeSkin.spine?.Replace("char", ""),
-                        name = $"{character.charName}:{character.prestigeSkin.prestigeSkinName}",
+                        name = $"{character.charName}: {character.prestigeSkin.prestigeSkinName}",
                         l2d = character.prestigeSkin.interact,
                         l2dTags = new List<L2DTag> { L2DTag.Prestige_Interact, L2DTag.Prestige_Skin },
                         releaseDate = character.prestigeSkin.releaseDate
