@@ -3,10 +3,180 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:DianaLab.GUI.Views"
+        xmlns:controls="clr-namespace:DianaLab.GUI.Controls"
+        xmlns:converters="clr-namespace:DianaLab.GUI.Converters"
+        xmlns:viewModels="clr-namespace:DianaLab.GUI.ViewModels"
         mc:Ignorable="d"
-        Title="L2D Metadata Editor" Height="450" Width="800">
-    <Grid>
+        Title="L2D Metadata Editor" Height="Auto" Width="500"
+        SizeToContent="Height">
+    <Window.Resources>
+        <converters:StringEqualsToVisibilityConverter x:Key="StringEqualsToVisibilityConverter"/>
+        <Style TargetType="controls:LabeledControl">
+            <Setter Property="LabelWidth" Value="120"/>
+            <Setter Property="Margin" Value="5"/> 
+        </Style> 
+    </Window.Resources>
+    
+    <Window.DataContext>
+        <viewModels:L2DMetadataEditorViewModel/>
+    </Window.DataContext>
+    
      
-    </Grid>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+        <StackPanel>  
+            <!-- Options -->
+            <controls:LabeledControl Label="Options:" LabelWidth="60" Margin="15,0,0,0">
+                <controls:LabeledControl.InputContent>
+                    <ComboBox ItemsSource="{Binding MetadataTypes}" SelectedItem="{Binding SelectedMetadataType}"/>
+                </controls:LabeledControl.InputContent>
+            </controls:LabeledControl>
+                
+            <!-- Character GroupBox -->
+            <GroupBox Header="Character" Margin="5" Visibility="{Binding SelectedMetadataType, Converter={StaticResource StringEqualsToVisibilityConverter}, ConverterParameter='Character'}">
+                <StackPanel>
+                    <controls:LabeledControl Label="ID:" LabelWidth="60">
+                        <controls:LabeledControl.InputContent>
+                            <TextBox Text="{Binding CharacterId}"/>
+                        </controls:LabeledControl.InputContent>
+                    </controls:LabeledControl>
+                    <controls:LabeledControl Label="Name:" LabelWidth="60">
+                        <controls:LabeledControl.InputContent>
+                            <TextBox Text="{Binding CharacterName}"/>
+                        </controls:LabeledControl.InputContent>
+                    </controls:LabeledControl>
+                    <controls:LabeledControl Label="Rarity:" LabelWidth="60">
+                        <controls:LabeledControl.InputContent>
+                            <ComboBox ItemsSource="{Binding Rarities}" SelectedItem="{Binding CharacterRarity}"/>
+                        </controls:LabeledControl.InputContent>
+                    </controls:LabeledControl>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+                        <Button Content="Add" Command="{Binding AddCharacterCommand}" Margin="0,0,5,0" Width="75"/>
+                        <Button Content="Reset" Command="{Binding ResetCharacterCommand}" Width="75"/>
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
+
+            <!-- Costume GroupBox -->
+            <GroupBox Header="Costume" Margin="5" Visibility="{Binding SelectedMetadataType, Converter={StaticResource StringEqualsToVisibilityConverter}, ConverterParameter='Costume'}">
+                <StackPanel>
+                    <controls:LabeledControl Label="Character ID/Name:">
+                        <controls:LabeledControl.InputContent>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Grid.Column="0" Text="{Binding CostumeCharacterSearch}" Margin="0,0,5,0"/>
+                                <Button Grid.Column="1" Content="Search"/>
+                            </Grid>
+                        </controls:LabeledControl.InputContent>
+                    </controls:LabeledControl>
+                    <controls:LabeledControl Label="Costume ID:">
+                        <controls:LabeledControl.InputContent>
+                            <TextBox Text="{Binding CostumeId}"/>
+                        </controls:LabeledControl.InputContent>
+                    </controls:LabeledControl>
+                    <controls:LabeledControl Label="Name:">
+                        <controls:LabeledControl.InputContent>
+                            <TextBox Text="{Binding CostumeName}"/>
+                        </controls:LabeledControl.InputContent>
+                    </controls:LabeledControl>
+                    <controls:LabeledControl Label="Spine:">
+                        <controls:LabeledControl.InputContent>
+                            <TextBox Text="{Binding CostumeSpine}"/>
+                        </controls:LabeledControl.InputContent>
+                    </controls:LabeledControl>
+                    <controls:LabeledControl Label="Cutscene:">
+                        <controls:LabeledControl.InputContent>
+                            <TextBox Text="{Binding CostumeCutscene}"/>
+                        </controls:LabeledControl.InputContent>
+                    </controls:LabeledControl>
+                    <controls:LabeledControl Label="Release Date:">
+                        <controls:LabeledControl.InputContent>
+                            <DatePicker SelectedDate="{Binding CostumeReleaseDate}"/>
+                        </controls:LabeledControl.InputContent>
+                    </controls:LabeledControl>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+                        <Button Content="Add" Command="{Binding AddCostumeCommand}" Margin="0,0,5,0" Width="75"/>
+                        <Button Content="Reset" Command="{Binding ResetCostumeCommand}" Width="75"/>
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
+
+            <!-- Special Guest GroupBox -->
+            <GroupBox Header="Special Guest" Margin="5" Visibility="{Binding SelectedMetadataType, Converter={StaticResource StringEqualsToVisibilityConverter}, ConverterParameter='Special Guest'}">
+                <StackPanel>
+                    <controls:LabeledControl Label="Character ID/Name:">
+                        <controls:LabeledControl.InputContent>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Text="{Binding GuestCharacterSearch}" Margin="0,0,5,0"/>
+                                <Button Grid.Column="1" Content="Search"/>
+                            </Grid>
+                        </controls:LabeledControl.InputContent>
+                    </controls:LabeledControl>
+                    <controls:LabeledControl Label="Release Date:">
+                        <controls:LabeledControl.InputContent>
+                            <DatePicker SelectedDate="{Binding GuestReleaseDate}"/>
+                        </controls:LabeledControl.InputContent>
+                    </controls:LabeledControl>
+                    <controls:LabeledControl Label="Interact:">
+                        <controls:LabeledControl.InputContent>
+                            <TextBox Text="{Binding GuestInteract}"/>
+                        </controls:LabeledControl.InputContent>
+                    </controls:LabeledControl>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+                        <Button Content="Add" Command="{Binding AddSpecialGuestCommand}" Margin="0,0,5,0" Width="75"/>
+                        <Button Content="Reset" Command="{Binding ResetSpecialGuestCommand}" Width="75"/>
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
+
+            <!-- Prestige Skin GroupBox -->
+            <GroupBox Header="Prestige Skin" Margin="5" Visibility="{Binding SelectedMetadataType, Converter={StaticResource StringEqualsToVisibilityConverter}, ConverterParameter='Prestige Skin'}">
+                <StackPanel>
+                    <controls:LabeledControl Label="Character ID/Name:">
+                        <controls:LabeledControl.InputContent>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Text="{Binding PrestigeCharacterSearch}" Margin="0,0,5,0"/>
+                                <Button Grid.Column="1" Content="Search"/>
+                            </Grid>
+                            
+                        </controls:LabeledControl.InputContent>
+                    </controls:LabeledControl>
+                    <controls:LabeledControl Label="Skin Name:">
+                        <controls:LabeledControl.InputContent>
+                            <TextBox Text="{Binding PrestigeSkinName}"/>
+                        </controls:LabeledControl.InputContent>
+                    </controls:LabeledControl>
+                    <controls:LabeledControl Label="Release Date:">
+                        <controls:LabeledControl.InputContent>
+                            <DatePicker SelectedDate="{Binding PrestigeReleaseDate}"/>
+                        </controls:LabeledControl.InputContent>
+                    </controls:LabeledControl>
+                    <controls:LabeledControl Label="Spine:">
+                        <controls:LabeledControl.InputContent>
+                            <TextBox Text="{Binding PrestigeSpine}"/>
+                        </controls:LabeledControl.InputContent>
+                    </controls:LabeledControl>
+                    <controls:LabeledControl Label="Interact:">
+                        <controls:LabeledControl.InputContent>
+                            <TextBox Text="{Binding PrestigeInteract}"/>
+                        </controls:LabeledControl.InputContent>
+                    </controls:LabeledControl>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+                        <Button Content="Add" Command="{Binding AddPrestigeSkinCommand}" Margin="0,0,5,0" Width="75"/>
+                        <Button Content="Reset" Command="{Binding ResetPrestigeSkinCommand}" Width="75"/>
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
+        </StackPanel>
+    </ScrollViewer>
 </Window>

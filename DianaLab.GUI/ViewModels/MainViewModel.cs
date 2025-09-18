@@ -6,15 +6,7 @@ namespace DianaLab.GUI.ViewModels
     public class MainViewModel : BaseViewModel
     {
         private BaseViewModel _currentView;
-        public BaseViewModel CurrentView
-        {
-            get { return _currentView; }
-            set
-            {
-                _currentView = value;
-                OnPropertyChanged();
-            }
-        }
+        public BaseViewModel CurrentView { get => _currentView; set { _currentView = value; OnPropertyChanged(); } }
 
         public ICommand ExtractViewCommand { get; set; }
         public ICommand Live2DAssetsViewCommand { get; set; }

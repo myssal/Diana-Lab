@@ -10,6 +10,7 @@ namespace DianaLab.GUI.Views
         public L2DMetadataEditorWindow()
         {
             InitializeComponent();
+            DataContext = new ViewModels.L2DMetadataEditorViewModel();
         }
     }
 }

@@ -47,15 +47,7 @@ namespace DianaLab.GUI.ViewModels
         public ObservableCollection<string> SearchSuggestions { get; } = new();
 
         private bool _isSuggestionsOpen;
-        public bool IsSuggestionsOpen
-        {
-            get => _isSuggestionsOpen;
-            set
-            {
-                _isSuggestionsOpen = value;
-                OnPropertyChanged();
-            }
-        }
+        public bool IsSuggestionsOpen { get => _isSuggestionsOpen; set { _isSuggestionsOpen = value; OnPropertyChanged(); } }
 
         public Live2DAssetsViewModel()
         {
